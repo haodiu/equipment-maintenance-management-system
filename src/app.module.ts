@@ -2,7 +2,6 @@ import './boilerplate.polyfill';
 
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import {
@@ -10,7 +9,6 @@ import {
   getDataSourceByName,
 } from 'typeorm-transactional';
 
-import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { HealthCheckerModule } from './modules/health/health.module';
 import { ApiConfigService } from './shared/services/api-config.service';
 import { SharedModule } from './shared/shared.module';
@@ -44,11 +42,6 @@ import { SharedModule } from './shared/shared.module';
     }),
     HealthCheckerModule,
   ],
-  providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: LoggingInterceptor,
-    },
-  ],
+  providers: [],
 })
 export class AppModule {}

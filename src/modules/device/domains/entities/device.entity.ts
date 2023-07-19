@@ -9,9 +9,9 @@ import {
 
 import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
-import { DeviceStatusEntity } from '../../../device-status/domains/entities/device-status.entity';
-import { DeviceTypeEntity } from '../../../device-type/domains/entities/device-type.entity';
-import { DisposalRequestEntity } from '../../../disposal-request/domains/entities/disposal-request.entity';
+import { DeviceStatusEntity } from '../../../device_status/domains/entities/device-status.entity';
+import { DeviceTypeEntity } from '../../../device_type/domains/entities/device-type.entity';
+import { DisposalRequestEntity } from '../../../disposal_request/domains/entities/disposal-request.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
 import type { DeviceDto } from '../dtos/device.dto';
 

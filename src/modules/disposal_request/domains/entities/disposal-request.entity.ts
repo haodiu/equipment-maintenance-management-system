@@ -6,9 +6,20 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
 import { DeviceEntity } from '../../../device/domains/entities/device.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
+import type { DisposalRequestDto } from '../dtos/disposal-request.dto';
+
+export interface IDisposalRequestEntity
+  extends IAbstractEntity<DisposalRequestDto> {
+  id: number;
+
+  reson: string;
+
+  approved: string;
+}
 
 @Entity({ name: 'disposal_requests' })
 export class DisposalRequestEntity extends AbstractEntity {

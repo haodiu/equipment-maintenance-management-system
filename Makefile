@@ -43,6 +43,6 @@ create-migrate:
 
 generate-migrate:
 	npm run migration:generate -- ./src/database/migrations/${MIGRATION_NAME}
-
+	
 fork-kill-dev:
 	lsof -t -i tcp:3000 | xargs kill

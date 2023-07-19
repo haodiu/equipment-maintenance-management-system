@@ -1,6 +1,5 @@
 import { getValue, setValue } from 'express-ctx';
 
-import type { AdminEntity } from '../modules/admin/domains/entities/admin.entity';
 import type { UserEntity } from '../modules/user/domains/entities/user.entity';
 
 export class ContextProvider {
@@ -21,13 +20,11 @@ export class ContextProvider {
     return `${ContextProvider.nameSpace}.${key}`;
   }
 
-  static setAuthUser(user: UserEntity | AdminEntity): void {
+  static setAuthUser(user: UserEntity): void {
     ContextProvider.set(ContextProvider.authUserKey, user);
   }
 
-  static getAuthUser(): UserEntity | AdminEntity | undefined {
-    return ContextProvider.get<UserEntity | AdminEntity>(
-      ContextProvider.authUserKey,
-    );
+  static getAuthUser(): UserEntity | undefined {
+    return ContextProvider.get<UserEntity>(ContextProvider.authUserKey);
   }
 }

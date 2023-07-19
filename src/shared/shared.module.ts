@@ -9,8 +9,6 @@ import { GeneratorService } from './services/generator.service';
 import { ImageService } from './services/image.service';
 import { MailModule } from './services/mail/mail.module';
 import { MailService } from './services/mail/mail.service';
-import { NatsService } from './services/nats.service';
-import { SenteService } from './services/sente.service';
 import { ValidatorService } from './services/validator.service';
 
 const providers: Provider[] = [
@@ -19,8 +17,6 @@ const providers: Provider[] = [
   AwsS3Service,
   GeneratorService,
   MailService,
-  NatsService,
-  SenteService,
   ImageService,
   Logger,
 ];

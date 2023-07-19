@@ -8,8 +8,8 @@ import {
 
 import { AbstractEntity } from '../../../../common/abstract.entity';
 import { DeviceEntity } from '../../../device/domains/entities/device.entity';
+import { MaintenanceTypeEntity } from '../../../maintenance_type/domains/entities/maintenance-type.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
-import { MaintenanceTypeEntity } from './maintenance-type.entity';
 
 @Entity({ name: 'maintenances' })
 export class MaintenanceRequestEntity extends AbstractEntity {
@@ -35,14 +35,14 @@ export class MaintenanceRequestEntity extends AbstractEntity {
   confirmed: boolean;
 
   @ManyToOne(() => MaintenanceTypeEntity)
-  @JoinColumn({ name: 'id' })
+  @JoinColumn({ name: 'type_id' })
   type: MaintenanceTypeEntity;
 
   @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'id' })
-  staff: UserEntity;
+  @JoinColumn({ name: 'user_id' })
+  user: UserEntity;
 
   @ManyToOne(() => DeviceEntity)
-  @JoinColumn({ name: 'id' })
+  @JoinColumn({ name: 'device_id' })
   device: DeviceEntity;
 }
