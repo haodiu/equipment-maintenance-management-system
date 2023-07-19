@@ -1,0 +1,57 @@
+version: "3"
+services:
+  app:
+    image: registry-gitlab.geekup.io/gu_alia/alia-backend-gi:latest
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "3000:3000"
+
+  nginx:
+    image: registry-gitlab.geekup.io/gu_alia/alia-backend-gi/nginx:latest
+    depends_on:
+      - app
+      - mailhog
+    environment:
+      - NGINX_SERVER_NAME=alia-api.geekup.io
+      - APP_HOST=app
+      - APP_PORT=3000
+      - NGINX_MAX_BODY=100M
+    ports:
+      - 80:80
+      - 443:443
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgres
+      TZ: 'GMT'
+      PGTZ: 'GMT'
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-data/postgresql:/var/lib/postgresql/data
+      - ./init-data.sh:/docker-entrypoint-initdb.d/init-data.sh
+    env_file:
+      - .env
+
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - ./db-data/redis:/data

@@ -1,0 +1,51 @@
+stages:
+  - analysis
+  - build
+  - deploy
+
+variables:
+  GIT_DEPTH: 0
+  DOCKER_REGISTRY_USER: $CI_REGISTRY_USER
+  DOCKER_REGISTRY_PASSWORD: $CI_REGISTRY_PASSWORD
+  DOCKER_REGISTRY_URL: $CI_REGISTRY
+  COMMIT_HASH: $CI_COMMIT_SHA
+  IMAGE_NAME_WITH_REGISTRY_PREFIX: $CI_REGISTRY_IMAGE
+
+sonarqube-reports:
+  stage: analysis
+  tags:
+    - gu_runner
+  image: 
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script: 
+    - sonar-scanner
+  allow_failure: true
+  only:
+    - merge_requests
+    - main
+
+# build-staging:
+#   image: docker:20.10.16
+#   stage: build
+#   tags:
+#     - gu_runner
+#   services:
+#     - docker:20.10.16-dind
+#   before_script:
+#     - docker login -u "$DOCKER_REGISTRY_USER" -p "$DOCKER_REGISTRY_PASSWORD" $DOCKER_REGISTRY_URL
+#   script:
+#     - export CONTAINER_FULL_IMAGE_NAME_WITH_TAG=$IMAGE_NAME_WITH_REGISTRY_PREFIX:$COMMIT_HASH
+#     - docker build -f ./Dockerfile --pull -t built-image-name .
+#     - docker tag built-image-name "$CONTAINER_FULL_IMAGE_NAME_WITH_TAG"
+#     - docker push "$CONTAINER_FULL_IMAGE_NAME_WITH_TAG"
+#     - echo $CONTAINER_FULL_IMAGE_NAME_WITH_TAG
+#   only:
+#     - dev

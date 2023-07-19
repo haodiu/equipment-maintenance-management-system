@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+      font-size: 24px;
+      margin: 0 0 20px;
+    }
+
+    p {
+      color: #555;
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+
+    .contact-info {
+      margin-top: 30px;
+    }
+
+    .contact-info p {
+      margin: 0;
+    }
+
+    .highlight {
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Hi {{ name }},</h1>
+
+    <p>Please access the files (attached below) for setting up basic working products with the following sign-in information:</p>
+
+    <p class="highlight">Username: {{ username }}</p>
+    <p class="highlight">Password: {{ password }}</p>
+    <p><em>(For privacy purposes, please change this default password after the first login)</em></p>
+
+    <p>For the nexion desktop application, please follow the guidelines attached below.</p>
+
+    <div class="contact-info">
+      <p>If you have any questions, feel free to contact me:</p>
+      <p><strong>Your han.nt (Han Nguyen)</strong></p>
+    </div>
+  </div>
+</body>
+
+</html>
