@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -9,11 +8,12 @@ import {
 
 import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
-import { DeviceStatusEntity } from '../../../device_status/domains/entities/device-status.entity';
-import { DeviceTypeEntity } from '../../../device_type/domains/entities/device-type.entity';
-import { DisposalRequestEntity } from '../../../disposal_request/domains/entities/disposal-request.entity';
+import { DeviceStatus } from '../../../../constants/device-status';
+import { LiquidationEntity } from '../../../liquidation/domains/entities/liquidation.entity';
+import { LogbookEntity } from '../../../logbook/domains/entities/logbook.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
 import type { DeviceDto } from '../dtos/device.dto';
+import { DeviceTypeEntity } from './device-type.entity';
 
 export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
   id: number;
@@ -21,6 +21,8 @@ export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
   name: string;
 
   image: string;
+
+  deviceStatus: DeviceStatus;
 
   purchaseLocation: string;
 
@@ -30,7 +32,7 @@ export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
 }
 
 @Entity({ name: 'devices' })
-export class DeviceEntity extends AbstractEntity {
+export class DeviceEntity extends AbstractEntity implements IDeviceEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -41,29 +43,32 @@ export class DeviceEntity extends AbstractEntity {
   image: string;
 
   @Column({ nullable: true })
+  deviceStatus: DeviceStatus;
+
+  @Column({ nullable: true })
   purchaseLocation: string;
 
   @Column({ nullable: true })
-  purchase_date: string;
+  purchaseDate: string;
 
   @Column({ nullable: true })
   price: number;
 
-  @ManyToOne(() => UserEntity)
-  @JoinColumn({ name: 'user_id' })
+  @ManyToOne(() => UserEntity, (userEntity) => userEntity.devices)
   user: UserEntity;
 
-  @ManyToOne(() => DeviceStatusEntity)
-  @JoinColumn({ name: 'status_id' })
-  status: DeviceStatusEntity;
-
-  @ManyToOne(() => DeviceTypeEntity)
-  @JoinColumn({ name: 'type_id' })
+  @ManyToOne(
+    () => DeviceTypeEntity,
+    (deviceTypeEntity) => deviceTypeEntity.devices,
+  )
   type: DeviceTypeEntity;
 
   @OneToMany(
-    () => DisposalRequestEntity,
-    (disposalRequests: DisposalRequestEntity) => disposalRequests.device,
+    () => LiquidationEntity,
+    (liquidationEntity) => liquidationEntity.device,
   )
-  disposalRequest: DisposalRequestEntity[];
+  liquidations: LiquidationEntity[];
+
+  @OneToMany(() => LogbookEntity, (logbookEntity) => logbookEntity.device)
+  logbooks: LogbookEntity[];
 }

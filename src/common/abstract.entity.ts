@@ -1,4 +1,4 @@
-import { CreateDateColumn } from 'typeorm';
+import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 import type { Constructor } from '../types';
 import type { AbstractDto } from './dto/abstract.dto';
@@ -19,7 +19,7 @@ export abstract class AbstractEntity<
   })
   createdAt: Date;
 
-  @CreateDateColumn({
+  @UpdateDateColumn({
     type: 'timestamp',
   })
   updatedAt: Date;

@@ -1,6 +1,7 @@
 import { type ValueOf } from '../interfaces';
 export const ROLE_TYPE = {
   USER: 'user',
+  MAINTENANCE_STAFF: 'maintenance_staff',
   ADMIN: 'admin',
 } as const;
 
