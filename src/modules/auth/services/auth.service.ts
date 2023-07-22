@@ -1,14 +1,15 @@
-import type { JwtService } from '@nestjs/jwt';
+import { Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { validateHash } from '../../../common/utils';
 import { UserNotFoundException } from '../../../exceptions';
 import { Unauthorized } from '../../../exceptions/unauthorized.exception';
 import type { IJwtClaims } from '../../../interfaces/IJwtClaims';
-import type { ApiConfigService } from '../../../shared/services/api-config.service';
-import type { LoginDto } from '../../user/domains/dtos/login.dto';
-import { LoginResponseDto } from '../../user/domains/dtos/login-response.dto';
-import type { UserService } from '../../user/services/user.service';
-
+import { ApiConfigService } from '../../../shared/services/api-config.service';
+import { UserService } from '../../user/services/user.service';
+import type { LoginDto } from '../dtos/login.dto';
+import { LoginResponseDto } from '../dtos/login-response.dto';
+@Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,

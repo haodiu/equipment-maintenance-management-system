@@ -1,18 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
-import { Trim } from '../../../../decorators';
+import { Trim } from '../../../decorators/transform.decorators';
 
-export class LoginDto {
+export class UserRegisterDto {
   @ApiProperty()
   @IsEmail()
   @IsNotEmpty()
   @Trim()
-  email: string;
+  readonly email: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Trim()
-  password: string;
+  readonly password: string;
 }

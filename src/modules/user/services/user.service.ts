@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { generateHash } from '../../../common/utils';
 import { ROLE_TYPE } from '../../../constants';
 import { UserNotFoundException } from '../../../exceptions';
+import type { UserRegisterDto } from '../../auth/dtos/user-register.dto';
 import type { UpdateUserProfileDto } from '../domains/dtos/update-user-profile.dto';
 import { UserDto } from '../domains/dtos/user.dto';
-import type { UserRegisterDto } from '../domains/dtos/user-register.dto';
 import type { UserEntity } from '../domains/entities/user.entity';
 import { UserRepository } from './../repositories/user.repository';
 
