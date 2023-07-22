@@ -8,4 +8,4 @@ export const LOGBOOK_STATUS = {
   CANCELED: 'canceled',
 } as const;
 
-export type LogbookStatus = ValueOf<typeof LOGBOOK_STATUS>;
+export type LogbookStatusType = ValueOf<typeof LOGBOOK_STATUS>;

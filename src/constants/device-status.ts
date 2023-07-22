@@ -7,4 +7,4 @@ export const DEVICE_STATUS = {
   DISPOSED: 'disposed',
 } as const;
 
-export type DeviceStatus = ValueOf<typeof DEVICE_STATUS>;
+export type DeviceStatusType = ValueOf<typeof DEVICE_STATUS>;

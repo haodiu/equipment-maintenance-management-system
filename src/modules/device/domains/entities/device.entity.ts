@@ -8,7 +8,7 @@ import {
 
 import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
-import { DeviceStatus } from '../../../../constants/device-status';
+import { DeviceStatusType } from '../../../../constants/device-status';
 import { LiquidationEntity } from '../../../liquidation/domains/entities/liquidation.entity';
 import { LogbookEntity } from '../../../logbook/domains/entities/logbook.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
@@ -22,7 +22,7 @@ export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
 
   image: string;
 
-  deviceStatus: DeviceStatus;
+  deviceStatus: DeviceStatusType;
 
   purchaseLocation: string;
 
@@ -43,7 +43,7 @@ export class DeviceEntity extends AbstractEntity implements IDeviceEntity {
   image: string;
 
   @Column({ nullable: true })
-  deviceStatus: DeviceStatus;
+  deviceStatus: DeviceStatusType;
 
   @Column({ nullable: true })
   purchaseLocation: string;

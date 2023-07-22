@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
-import { LogbookStatus } from '../../../../constants/logbook-status';
+import { LogbookStatusType } from '../../../../constants/logbook-status';
 import { DeviceEntity } from '../../../device/domains/entities/device.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
 import type { LogbookDto } from '../dtos/logbook.dto';
@@ -13,7 +13,7 @@ export interface ILogbookEntity extends IAbstractEntity<LogbookDto> {
 
   description: string;
 
-  status: LogbookStatus;
+  status: LogbookStatusType;
 
   confirmed: boolean;
 }
@@ -30,7 +30,7 @@ export class LogbookEntity
   description: string;
 
   @Column()
-  status: LogbookStatus;
+  status: LogbookStatusType;
 
   @Column({ default: false })
   confirmed: boolean;

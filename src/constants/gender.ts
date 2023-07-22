@@ -4,4 +4,4 @@ export const GENDER = {
   FEMALE: 'female',
 } as const;
 
-export type Gender = ValueOf<typeof GENDER>;
+export type GenderType = ValueOf<typeof GENDER>;
