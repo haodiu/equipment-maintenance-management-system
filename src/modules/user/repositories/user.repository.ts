@@ -16,4 +16,27 @@ export class UserRepository extends Repository<UserEntity> {
       },
     });
   }
+
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    return this.findOne({
+      where: {
+        email,
+      },
+    });
+  }
+
+  async findOneByFilter(
+    options: Partial<{
+      id: number;
+      email: string;
+    }>,
+  ): Promise<UserEntity | null> {
+    const queryBuilder = this.createQueryBuilder('user');
+
+    queryBuilder
+      .where('user.id = :id', { id: options.id })
+      .orWhere('user.email = :email', { email: options.email });
+
+    return queryBuilder.getOne();
+  }
 }

@@ -144,9 +144,6 @@ export class ApiConfigService {
       accessTokenPrivateKey: this.getString('ACCESS_TOKEN_PRIVATE_KEY'),
       publicKey: this.getString('JWT_PUBLIC_KEY'),
       accessTokenExpirationTime: this.getNumber('ACCESS_TOKEN_EXPIRATION_TIME'),
-      refreshTokenExpirationTime: this.getNumber(
-        'REFRESH_TOKEN_EXPIRATION_TIME',
-      ),
     };
   }
 

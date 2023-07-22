@@ -21,7 +21,7 @@ export class UserController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   getUser(@Param('id') userId: number) {
-    return this.userService.findUserById(userId);
+    return this.userService.getOneById(userId);
   }
 
   @Put(':userId/profile')

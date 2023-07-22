@@ -1,9 +1,4 @@
-export interface IAdminJwtClaims {
-  username: string;
-  role: string;
-}
-
-export interface IUserJwtClaims {
+export interface IJwtClaims {
   id: number;
   role: string;
 }
