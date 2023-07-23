@@ -1,7 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-import { DeviceStatusType } from '../../../../constants/device-status';
 import { Trim } from '../../../../decorators';
 
 export class InputDeviceDto {
@@ -9,25 +8,15 @@ export class InputDeviceDto {
   @IsString()
   @IsNotEmpty()
   @Trim()
-  name: string;
+  name?: string;
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
-  @Trim()
   typeId: number;
 
   @ApiPropertyOptional()
   @IsNumber()
-  @IsNotEmpty()
-  @Trim()
-  inUseBy: number;
-
-  @ApiPropertyOptional()
-  @IsString()
-  @IsNotEmpty()
-  @Trim()
-  deviceStatus: DeviceStatusType;
+  userId: number;
 
   @ApiPropertyOptional()
   @IsString()

@@ -9,12 +9,6 @@ export class AbstractDto {
   @ApiProperty()
   updatedAt?: Date;
 
-  @ApiProperty()
-  createdBy?: number;
-
-  @ApiProperty()
-  updatedBy?: number;
-
   constructor(entity: AbstractEntity, options?: { excludeFields?: boolean }) {
     if (!options?.excludeFields) {
       this.createdAt = entity.createdAt;
