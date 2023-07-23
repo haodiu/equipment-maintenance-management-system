@@ -16,6 +16,8 @@ export interface ILogbookEntity extends IAbstractEntity<LogbookDto> {
   status: LogbookStatusType;
 
   confirmed: boolean;
+
+  isDeleted: boolean;
 }
 
 @Entity({ name: 'logbooks' })
@@ -34,6 +36,9 @@ export class LogbookEntity
 
   @Column({ default: false })
   confirmed: boolean;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 
   @ManyToOne(
     () => LogbookTypeEntity,

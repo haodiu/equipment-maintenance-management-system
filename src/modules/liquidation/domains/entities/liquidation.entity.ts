@@ -12,6 +12,8 @@ export interface ILiquidationEntity extends IAbstractEntity<LiquidationDto> {
   reason: string;
 
   approved: boolean;
+
+  isDeleted: boolean;
 }
 
 @Entity({ name: 'liquidations' })
@@ -27,6 +29,9 @@ export class LiquidationEntity
 
   @Column({ default: false })
   approved: boolean;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 
   @ManyToOne(() => DeviceEntity, (deviceEntity) => deviceEntity.liquidations)
   device: DeviceEntity;

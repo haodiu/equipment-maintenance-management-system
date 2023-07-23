@@ -29,6 +29,8 @@ export interface IUserEntity extends IAbstractEntity<UserDto> {
   avatar: string;
 
   role: RoleType;
+
+  isDeleted: boolean;
 }
 
 @Entity({ name: 'users' })
@@ -65,6 +67,9 @@ export class UserEntity extends AbstractEntity<UserDto> implements IUserEntity {
 
   @Column()
   role: RoleType;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 
   @OneToMany(() => DeviceEntity, (device: DeviceEntity) => device.user)
   devices: DeviceEntity[];

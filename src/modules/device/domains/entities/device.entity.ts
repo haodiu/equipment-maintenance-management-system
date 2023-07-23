@@ -29,6 +29,8 @@ export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
   purchaseDate: string;
 
   price: number;
+
+  isDeleted: boolean;
 }
 
 @Entity({ name: 'devices' })
@@ -53,6 +55,9 @@ export class DeviceEntity extends AbstractEntity implements IDeviceEntity {
 
   @Column({ nullable: true })
   price: number;
+
+  @Column({ default: false })
+  isDeleted: boolean;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.devices)
   user: UserEntity;
