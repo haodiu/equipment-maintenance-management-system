@@ -26,10 +26,10 @@ export class DeviceResponseDto {
   @ApiProperty()
   purchaseDate?: string;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => DeviceTypeDto }) // Use a factory function for DeviceTypeDto to handle the possibility of 'undefined'
   type?: DeviceTypeDto;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => DeviceUserDto }) // Use a factory function for DeviceUserDto to handle the possibility of 'undefined'
   user?: DeviceUserDto;
 
   constructor(device: Partial<DeviceEntity>) {
@@ -40,10 +40,7 @@ export class DeviceResponseDto {
     this.price = device.price;
     this.purchaseDate = device.purchaseDate;
     this.purchaseLocation = device.purchaseLocation;
-    // Check if device.type is defined before creating DeviceTypeDto
     this.type = device.type ? new DeviceTypeDto(device.type) : undefined;
-
-    // Check if device.user is defined before creating DeviceUserDto
     this.user = device.user ? new DeviceUserDto(device.user) : undefined;
   }
 }

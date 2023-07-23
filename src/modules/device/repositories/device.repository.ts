@@ -25,4 +25,12 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       },
     });
   }
+
+  async getDetail(id: number): Promise<DeviceEntity | null> {
+    return this.createQueryBuilder('devices')
+      .select('devices')
+      .leftJoinAndSelect('devices.type', 'deviceTypes')
+      .where('id =: id', { id })
+      .getOne();
+  }
 }

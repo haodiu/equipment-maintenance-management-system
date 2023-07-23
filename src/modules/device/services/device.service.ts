@@ -21,7 +21,7 @@ export class DeviceService {
   }
 
   async getDetail(deviceId: number): Promise<DeviceResponseDto> {
-    const device = await this.deviceRepository.findById(deviceId);
+    const device = await this.deviceRepository.getDetail(deviceId);
 
     if (!device) {
       throw new NotFoundException('Device not found');
