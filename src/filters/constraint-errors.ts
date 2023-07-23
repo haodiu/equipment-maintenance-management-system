@@ -13,6 +13,10 @@ export const ERROR_USER_NOT_FOUND = 'error.userNotFound';
 export const ERROR_UNIQUE_EMAIL = 'error.unique.email';
 export const ERROR_USER_CONFLICT = 'error.userConflict';
 
+// Device Module error messages
+export const ERROR_DEVICE_NOT_FOUND = 'error.deviceNotFound';
+export const ERROR_DEVICE_TYPE_NOT_FOUND = 'error.deviceTypeNotFound';
+
 // Obd Stage error messages
 export const ERROR_OBD_STAGE_NOT_FOUND = 'error.obdStageNotFound';
 
@@ -53,6 +57,10 @@ export const CONSTRAINT_ERRORS: Record<string, string | string[]> = {
   USER_423: ERROR_FORCE_CHANGE_PASSWORD,
   USER_003: ERROR_UNAUTHORIZED,
   USER_004: ERROR_USER_CONFLICT,
+
+  // Device Module error
+  DEVICE_001: ERROR_DEVICE_NOT_FOUND,
+  DEVICE_002: ERROR_DEVICE_TYPE_NOT_FOUND,
 
   // Obd Stage error
   STAGE_001: ERROR_OBD_STAGE_NOT_FOUND,

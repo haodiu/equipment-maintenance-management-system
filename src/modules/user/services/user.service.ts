@@ -33,6 +33,16 @@ export class UserService {
     return user;
   }
 
+  async findOneById(id: number): Promise<UserEntity | null> {
+    const user = await this.userRepository.findOneByFilter({ id });
+
+    if (!user) {
+      throw new UserNotFoundException('User not found');
+    }
+
+    return user;
+  }
+
   async createUser(userRegisterDto: UserRegisterDto): Promise<UserDto> {
     const passwordHash = generateHash(userRegisterDto.password);
     const user = this.userRepository.create({

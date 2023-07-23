@@ -26,11 +26,20 @@ export class DeviceRepository extends Repository<DeviceEntity> {
     });
   }
 
-  async getDetail(id: number): Promise<DeviceEntity | null> {
+  async getDetail(deviceId: number): Promise<DeviceEntity | null> {
     return this.createQueryBuilder('devices')
       .select('devices')
       .leftJoinAndSelect('devices.type', 'deviceTypes')
-      .where('id =: id', { id })
+      .leftJoinAndSelect('devices.user', 'users')
+      .where('devices.id = :deviceId', { deviceId })
       .getOne();
+  }
+
+  async getAll(): Promise<DeviceEntity[] | null> {
+    return this.createQueryBuilder('devices')
+      .select('devices')
+      .leftJoinAndSelect('devices.type', 'deviceTypes')
+      .leftJoinAndSelect('devices.user', 'users')
+      .getMany();
   }
 }

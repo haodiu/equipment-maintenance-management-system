@@ -25,16 +25,14 @@ export class AuthService {
   }
 
   async validateAdminSignIn(credential: LoginDto): Promise<LoginResponseDto> {
-    const user = await this.userService.findOneByEmail('user@gmail.com');
+    const { email, password } = credential;
+    const user = await this.userService.findOneByEmail(email);
 
     if (!user) {
       throw new UserNotFoundException('Admin not found');
     }
 
-    const isPasswordValid = await validateHash(
-      credential.password,
-      user.password,
-    );
+    const isPasswordValid = await validateHash(password, user.password);
 
     if (!isPasswordValid) {
       throw new Unauthorized('Invalid credentials');

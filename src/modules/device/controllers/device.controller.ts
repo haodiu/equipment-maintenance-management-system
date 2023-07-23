@@ -27,6 +27,12 @@ export class DeviceController {
     return this.deviceService.createDevice(inputDeviceDto);
   }
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  getAllDevice(): Promise<DeviceResponseDto[]> {
+    return this.deviceService.getAll();
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   getDevice(@Param('id') deviceId: number): Promise<DeviceResponseDto> {

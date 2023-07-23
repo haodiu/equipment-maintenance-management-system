@@ -1,6 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
+import { UserNotFoundException } from '../../../exceptions';
+import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
+import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
@@ -24,10 +27,20 @@ export class DeviceService {
     const device = await this.deviceRepository.getDetail(deviceId);
 
     if (!device) {
-      throw new NotFoundException('Device not found');
+      throw new DeviceNotFoundException('Device not found');
     }
 
     return new DeviceResponseDto(device);
+  }
+
+  async getAll(): Promise<DeviceResponseDto[]> {
+    const devices = await this.deviceRepository.getAll();
+
+    if (!devices || devices.length === 0) {
+      throw new DeviceNotFoundException('Devices not found');
+    }
+
+    return devices.map((device) => new DeviceResponseDto(device));
   }
 
   async createDevice(
@@ -38,7 +51,7 @@ export class DeviceService {
     const deviceType = await this.deviceTypeRepository.findById(typeId);
 
     if (!deviceType) {
-      throw new NotFoundException('DeviceType not found');
+      throw new DeviceTypeNotFoundException('DeviceType not found');
     }
 
     const device = this.deviceRepository.create({
@@ -78,14 +91,14 @@ export class DeviceService {
     const device = await this.deviceRepository.findById(deviceId);
 
     if (!device) {
-      throw new NotFoundException('Device not found');
+      throw new DeviceNotFoundException('Device not found');
     }
 
     if (typeId) {
       const type = await this.deviceTypeRepository.findById(typeId);
 
       if (!type) {
-        throw new NotFoundException('DeviceType not found');
+        throw new DeviceTypeNotFoundException('DeviceType not found');
       }
 
       device.type = type;
@@ -95,7 +108,7 @@ export class DeviceService {
       const user = await this.userRepository.findById(userId);
 
       if (!user) {
-        throw new NotFoundException('User not found');
+        throw new UserNotFoundException('User not found');
       }
 
       device.user = user;
