@@ -1,4 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';
@@ -16,5 +25,20 @@ export class DeviceController {
     @Body() inputDeviceDto: InputDeviceDto,
   ): Promise<DeviceResponseDto> {
     return this.deviceService.createDevice(inputDeviceDto);
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  getDevice(@Param('id') deviceId: number): Promise<DeviceResponseDto> {
+    return this.deviceService.getDetail(deviceId);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.OK)
+  updateDevice(
+    @Param('id') deviceId: number,
+    @Body() inputDeviceDto: InputDeviceDto,
+  ): Promise<DeviceResponseDto> {
+    return this.deviceService.updateDevice(deviceId, inputDeviceDto);
   }
 }

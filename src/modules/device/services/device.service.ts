@@ -20,6 +20,16 @@ export class DeviceService {
     return this.deviceTypeRepository.findById(typeId);
   }
 
+  async getDetail(deviceId: number): Promise<DeviceResponseDto> {
+    const device = await this.deviceRepository.findById(deviceId);
+
+    if (!device) {
+      throw new NotFoundException('Device not found');
+    }
+
+    return new DeviceResponseDto(device);
+  }
+
   async createDevice(
     inputDeviceDto: InputDeviceDto,
   ): Promise<DeviceResponseDto> {
@@ -44,6 +54,60 @@ export class DeviceService {
         device.user = user;
       }
     }
+
+    await this.deviceRepository.save(device);
+
+    return new DeviceResponseDto(device);
+  }
+
+  async updateDevice(
+    deviceId: number,
+    inputDeviceDto: Partial<InputDeviceDto>,
+  ): Promise<DeviceResponseDto> {
+    const {
+      name,
+      typeId,
+      userId,
+      deviceStatus,
+      purchaseDate,
+      purchaseLocation,
+      price,
+      image,
+    } = inputDeviceDto;
+
+    const device = await this.deviceRepository.findById(deviceId);
+
+    if (!device) {
+      throw new NotFoundException('Device not found');
+    }
+
+    if (typeId) {
+      const type = await this.deviceTypeRepository.findById(typeId);
+
+      if (!type) {
+        throw new NotFoundException('DeviceType not found');
+      }
+
+      device.type = type;
+    }
+
+    if (userId) {
+      const user = await this.userRepository.findById(userId);
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      device.user = user;
+    }
+
+    // Update the device properties with object destructuring
+    device.name = name ?? device.name;
+    device.deviceStatus = deviceStatus ?? device.deviceStatus;
+    device.purchaseDate = purchaseDate ?? device.purchaseDate;
+    device.purchaseLocation = purchaseLocation ?? device.purchaseLocation;
+    device.price = price ?? device.price;
+    device.image = image ?? device.image;
 
     await this.deviceRepository.save(device);
 

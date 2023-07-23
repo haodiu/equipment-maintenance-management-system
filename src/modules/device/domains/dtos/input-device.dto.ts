@@ -1,22 +1,32 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
+import { DeviceStatusType } from '../../../../constants/device-status';
 import { Trim } from '../../../../decorators';
 
 export class InputDeviceDto {
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsNotEmpty()
   @Trim()
-  name?: string;
+  name: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsNumber()
   typeId: number;
 
   @ApiPropertyOptional()
   @IsNumber()
   userId: number;
+
+  @ApiPropertyOptional({
+    type: 'string',
+    enum: ['not_used', 'in_use', 'need_repair', 'pending_disposal', 'disposed'],
+  })
+  @IsString()
+  @IsNotEmpty()
+  @Trim()
+  deviceStatus: DeviceStatusType;
 
   @ApiPropertyOptional()
   @IsString()
