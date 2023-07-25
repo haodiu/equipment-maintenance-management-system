@@ -1,26 +1,35 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { UserNotFoundException } from '../../../exceptions';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
+import { LogbookService } from '../../logbook/services/logbook.service';
+import { UserService } from '../../user/services/user.service';
+import { DeviceLogbookDto } from '../domains/dtos/device-logbook.dto';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
+import type { DeviceEntity } from '../domains/entities/device.entity';
 import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
 import { DeviceRepository } from '../repositories/device.repository';
 import { DeviceTypeRepository } from '../repositories/device-type.repisitory';
-import { UserRepository } from './../../user/repositories/user.repository';
 
 @Injectable()
 export class DeviceService {
   constructor(
     private readonly deviceRepository: DeviceRepository,
     private readonly deviceTypeRepository: DeviceTypeRepository,
-    private readonly userRepository: UserRepository,
+    private readonly userService: UserService,
+    @Inject(forwardRef(() => LogbookService))
+    private readonly logbookService: LogbookService,
   ) {}
 
   findDeviceTypeById(typeId: number): Promise<DeviceTypeEntity | null> {
     return this.deviceTypeRepository.findById(typeId);
+  }
+
+  findById(deviceId: number): Promise<DeviceEntity | null> {
+    return this.deviceRepository.findById(deviceId);
   }
 
   async getDetail(deviceId: number): Promise<DeviceResponseDto> {
@@ -61,7 +70,7 @@ export class DeviceService {
     });
 
     if (userId) {
-      const user = await this.userRepository.findById(userId);
+      const user = await this.userService.findOneById(userId);
 
       if (user) {
         device.user = user;
@@ -105,7 +114,7 @@ export class DeviceService {
     }
 
     if (userId) {
-      const user = await this.userRepository.findById(userId);
+      const user = await this.userService.findOneById(userId);
 
       if (!user) {
         throw new UserNotFoundException('User not found');
@@ -125,5 +134,29 @@ export class DeviceService {
     await this.deviceRepository.save(device);
 
     return new DeviceResponseDto(device);
+  }
+
+  async softDelete(deviceId: number) {
+    const device = await this.deviceRepository.findById(deviceId);
+
+    if (!device) {
+      throw new DeviceNotFoundException('Device not found');
+    }
+
+    device.isDeleted = true;
+
+    await this.deviceRepository.save(device);
+  }
+
+  async getDeviceHistory(deviceId: number): Promise<DeviceLogbookDto> {
+    const device = await this.deviceRepository.getDetail(deviceId);
+
+    if (!device) {
+      throw new DeviceNotFoundException('Device not found');
+    }
+
+    const logbookInfoDtos = await this.logbookService.findByDeviceId(deviceId);
+
+    return new DeviceLogbookDto(device, logbookInfoDtos);
   }
 }

@@ -8,5 +8,11 @@ export class ChangePasswordDto {
   @IsString()
   @IsNotEmpty()
   @Trim()
-  readonly password: string;
+  readonly oldPassword: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  @Trim()
+  readonly newPassword: string;
 }

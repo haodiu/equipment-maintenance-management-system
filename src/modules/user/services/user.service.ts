@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
-import { generateHash } from '../../../common/utils';
+import { generateHash, validateHash } from '../../../common/utils';
 import { ROLE_TYPE } from '../../../constants';
 import { UserNotFoundException } from '../../../exceptions';
 import type { UserRegisterDto } from '../../auth/dtos/user-register.dto';
+import type { ChangePasswordDto } from '../domains/dtos/change-password-dto';
 import type { UpdateUserProfileDto } from '../domains/dtos/update-user-profile.dto';
 import { UserDto } from '../domains/dtos/user.dto';
 import type { UserEntity } from '../domains/entities/user.entity';
@@ -71,5 +72,29 @@ export class UserService {
     await this.userRepository.save(updateUser);
 
     return new UserDto(updateUser);
+  }
+
+  async changePassword(
+    userId: number,
+    changePasswordDto: ChangePasswordDto,
+    authUser: UserEntity,
+  ) {
+    if (userId !== authUser.id) {
+      throw new ForbiddenException('Only change password yourself');
+    }
+
+    const { oldPassword, newPassword } = changePasswordDto;
+
+    const isPasswordValid = await validateHash(oldPassword, authUser.password);
+
+    if (!isPasswordValid) {
+      throw new Error('Password invalid');
+    }
+
+    const newPasswordHash = generateHash(newPassword);
+
+    authUser.password = newPasswordHash;
+
+    await this.userRepository.save(authUser);
   }
 }

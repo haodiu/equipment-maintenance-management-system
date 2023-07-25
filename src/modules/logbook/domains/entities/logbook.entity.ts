@@ -37,6 +37,9 @@ export class LogbookEntity
   @Column({ default: false })
   confirmed: boolean;
 
+  @Column({ nullable: true })
+  confirmedDescription: string;
+
   @Column({ default: false })
   isDeleted: boolean;
 

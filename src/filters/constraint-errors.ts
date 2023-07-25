@@ -17,6 +17,9 @@ export const ERROR_USER_CONFLICT = 'error.userConflict';
 export const ERROR_DEVICE_NOT_FOUND = 'error.deviceNotFound';
 export const ERROR_DEVICE_TYPE_NOT_FOUND = 'error.deviceTypeNotFound';
 
+// Logbook Module error messages
+export const ERROR_LOGBOOK_NOT_FOUND = 'error.logbookNotFound';
+
 // Obd Stage error messages
 export const ERROR_OBD_STAGE_NOT_FOUND = 'error.obdStageNotFound';
 
@@ -61,6 +64,9 @@ export const CONSTRAINT_ERRORS: Record<string, string | string[]> = {
   // Device Module error
   DEVICE_001: ERROR_DEVICE_NOT_FOUND,
   DEVICE_002: ERROR_DEVICE_TYPE_NOT_FOUND,
+
+  // Logbook Module error
+  LOGBOOK_001: ERROR_LOGBOOK_NOT_FOUND,
 
   // Obd Stage error
   STAGE_001: ERROR_OBD_STAGE_NOT_FOUND,
