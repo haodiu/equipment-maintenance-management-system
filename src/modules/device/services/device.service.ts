@@ -1,12 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { UserNotFoundException } from '../../../exceptions';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
-import { LogbookService } from '../../logbook/services/logbook.service';
 import { UserService } from '../../user/services/user.service';
-import { DeviceLogbookDto } from '../domains/dtos/device-logbook.dto';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import type { DeviceEntity } from '../domains/entities/device.entity';
@@ -20,8 +18,6 @@ export class DeviceService {
     private readonly deviceRepository: DeviceRepository,
     private readonly deviceTypeRepository: DeviceTypeRepository,
     private readonly userService: UserService,
-    @Inject(forwardRef(() => LogbookService))
-    private readonly logbookService: LogbookService,
   ) {}
 
   findDeviceTypeById(typeId: number): Promise<DeviceTypeEntity | null> {
@@ -146,17 +142,5 @@ export class DeviceService {
     device.isDeleted = true;
 
     await this.deviceRepository.save(device);
-  }
-
-  async getDeviceHistory(deviceId: number): Promise<DeviceLogbookDto> {
-    const device = await this.deviceRepository.getDetail(deviceId);
-
-    if (!device) {
-      throw new DeviceNotFoundException('Device not found');
-    }
-
-    const logbookInfoDtos = await this.logbookService.findByDeviceId(deviceId);
-
-    return new DeviceLogbookDto(device, logbookInfoDtos);
   }
 }

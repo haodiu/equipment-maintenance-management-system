@@ -12,7 +12,8 @@ import { ApiTags } from '@nestjs/swagger';
 
 import { ROLE_TYPE } from '../../../constants';
 import { Auth } from '../../../decorators';
-import type { DeviceLogbookDto } from '../domains/dtos/device-logbook.dto';
+import type { LogbookDto } from '../../logbook/domains/dtos/logbook.dto';
+import { LogbookService } from '../../logbook/services/logbook.service';
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import { DeviceService } from '../services/device.service';
@@ -20,7 +21,10 @@ import { DeviceService } from '../services/device.service';
 @Controller('devices')
 @ApiTags('devices')
 export class DeviceController {
-  constructor(private readonly deviceService: DeviceService) {}
+  constructor(
+    private readonly deviceService: DeviceService,
+    private readonly logbookService: LogbookService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
@@ -44,8 +48,14 @@ export class DeviceController {
 
   @Get(':id/logbook')
   @HttpCode(HttpStatus.OK)
-  getDeviceHistory(@Param('id') deviceId: number): Promise<DeviceLogbookDto> {
-    return this.deviceService.getDeviceHistory(deviceId);
+  getLastLogbook(@Param('id') deviceId: number): Promise<LogbookDto | null> {
+    return this.logbookService.findLastOneByDeviceId(deviceId);
+  }
+
+  @Get(':id/logbooks')
+  @HttpCode(HttpStatus.OK)
+  getLogbooks(@Param('id') deviceId: number): Promise<LogbookDto[] | null> {
+    return this.logbookService.findAllByDeviceId(deviceId);
   }
 
   @Put(':id/update')

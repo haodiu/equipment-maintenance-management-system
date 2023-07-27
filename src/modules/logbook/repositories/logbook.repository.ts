@@ -11,7 +11,8 @@ export class LogbookRepository extends Repository<LogbookEntity> {
 
   async findByDeviceId(deviceId: number): Promise<LogbookEntity[]> {
     return this.createQueryBuilder('logbooks')
-      .select('logbooks')
+      .leftJoinAndSelect('logbooks.user', 'user')
+      .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType')
       .where('logbooks.device_id = :deviceId', { deviceId })
       .getMany();
@@ -19,7 +20,6 @@ export class LogbookRepository extends Repository<LogbookEntity> {
 
   async findOneById(id: number): Promise<LogbookEntity | null> {
     return this.createQueryBuilder('logbooks')
-      .select('logbooks')
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType')
@@ -29,7 +29,6 @@ export class LogbookRepository extends Repository<LogbookEntity> {
 
   async findAll(type?: string): Promise<LogbookEntity[]> {
     const query = this.createQueryBuilder('logbooks')
-      .select('logbooks')
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType');
@@ -39,5 +38,17 @@ export class LogbookRepository extends Repository<LogbookEntity> {
     }
 
     return query.getMany();
+  }
+
+  async findLastLogbookByUserId(
+    deviceId: number,
+  ): Promise<LogbookEntity | null> {
+    return this.createQueryBuilder('logbooks')
+      .leftJoinAndSelect('logbooks.user', 'user')
+      .leftJoinAndSelect('logbooks.device', 'device')
+      .leftJoinAndSelect('logbooks.type', 'logbookType')
+      .where('logbooks.device_id = :deviceId', { deviceId })
+      .orderBy('logbooks.created_at', 'DESC')
+      .getOne();
   }
 }
