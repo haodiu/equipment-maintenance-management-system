@@ -20,6 +20,9 @@ export const ERROR_DEVICE_TYPE_NOT_FOUND = 'error.deviceTypeNotFound';
 // Logbook Module error messages
 export const ERROR_LOGBOOK_NOT_FOUND = 'error.logbookNotFound';
 
+// Liquidation Module error messages
+export const ERROR_LIQUIDATION_NOT_FOUNS = 'error.liquidationNotFound';
+
 // Obd Stage error messages
 export const ERROR_OBD_STAGE_NOT_FOUND = 'error.obdStageNotFound';
 
@@ -67,6 +70,9 @@ export const CONSTRAINT_ERRORS: Record<string, string | string[]> = {
 
   // Logbook Module error
   LOGBOOK_001: ERROR_LOGBOOK_NOT_FOUND,
+
+  // Liquidation Module error
+  LIQUIDATION_001: ERROR_LIQUIDATION_NOT_FOUNS,
 
   // Obd Stage error
   STAGE_001: ERROR_OBD_STAGE_NOT_FOUND,

@@ -27,7 +27,7 @@ export class DeviceResponseDto {
   purchaseDate?: string;
 
   @ApiProperty({ type: () => DeviceTypeDto }) // Use a factory function for DeviceTypeDto to handle the possibility of 'undefined'
-  type?: DeviceTypeDto;
+  type?: string;
 
   @ApiProperty({ type: () => DeviceUserDto }) // Use a factory function for DeviceUserDto to handle the possibility of 'undefined'
   user?: DeviceUserDto;
@@ -40,7 +40,7 @@ export class DeviceResponseDto {
     this.price = device.price;
     this.purchaseDate = device.purchaseDate;
     this.purchaseLocation = device.purchaseLocation;
-    this.type = device.type ? new DeviceTypeDto(device.type) : undefined;
+    this.type = device.type?.type;
     this.user = device.user ? new DeviceUserDto(device.user) : undefined;
   }
 }

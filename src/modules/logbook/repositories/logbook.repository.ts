@@ -27,12 +27,17 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .getOne();
   }
 
-  async findAll(): Promise<LogbookEntity[]> {
-    return this.createQueryBuilder('logbooks')
+  async findAll(type?: string): Promise<LogbookEntity[]> {
+    const query = this.createQueryBuilder('logbooks')
       .select('logbooks')
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .getMany();
+      .leftJoinAndSelect('logbooks.type', 'logbookType');
+
+    if (type) {
+      query.where('logbookType.type = :type', { type });
+    }
+
+    return query.getMany();
   }
 }

@@ -12,6 +12,7 @@ import {
 import { AuthModule } from './modules/auth/auth.module';
 import { DeviceModule } from './modules/device/device.module';
 import { HealthCheckerModule } from './modules/health/health.module';
+import { LiquidationModule } from './modules/liquidation/liquidation.module';
 import { LogbookModule } from './modules/logbook/logbook.module';
 import { UserModule } from './modules/user/user.module';
 import { ApiConfigService } from './shared/services/api-config.service';
@@ -49,6 +50,7 @@ import { SharedModule } from './shared/shared.module';
     UserModule,
     DeviceModule,
     LogbookModule,
+    LiquidationModule,
   ],
   providers: [],
 })

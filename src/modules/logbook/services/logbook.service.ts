@@ -10,6 +10,7 @@ import { UserService } from '../../user/services/user.service';
 import { LogbookDto } from '../domains/dtos/logbook.dto';
 import type { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import { LogbookInfoDto } from '../domains/dtos/logbook-info.dto';
+import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
 import type { LogbookUpdateDto } from '../domains/dtos/logbook-update.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
@@ -61,8 +62,9 @@ export class LogbookService {
     return new LogbookDto(logbook);
   }
 
-  async getAll(): Promise<LogbookDto[]> {
-    const logbooks = await this.logbookRepository.findAll();
+  async getAll(option?: LogbookQueryDto): Promise<LogbookDto[]> {
+    const type = option?.type;
+    const logbooks = await this.logbookRepository.findAll(type);
 
     return logbooks.map((logbook) => new LogbookDto(logbook));
   }
