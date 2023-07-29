@@ -15,6 +15,7 @@ export class LiquidationRepository extends Repository<LiquidationEntity> {
       .leftJoinAndSelect('liquidations.device', 'device')
       .leftJoinAndSelect('liquidations.auth', 'users')
       .where('liquidations.id = :id', { id })
+      .andWhere('liquidations.is_deleted = FALSE')
       .getOne();
   }
 
@@ -28,6 +29,8 @@ export class LiquidationRepository extends Repository<LiquidationEntity> {
       query.where('liquidations.approved = :isApproved', { isApproved });
     }
 
+    query.andWhere('liquidations.is_deleted = FALSE');
+
     return query.getMany();
   }
 
@@ -38,6 +41,7 @@ export class LiquidationRepository extends Repository<LiquidationEntity> {
       .select('liquidations')
       .leftJoinAndSelect('liquidations.device', 'device')
       .where('liquidations.device_id = :deviceId', { deviceId })
+      .andWhere('liquidations.is_deleted = FALSE')
       .andWhere('liquidations.approved = TRUE')
       .getOne();
   }

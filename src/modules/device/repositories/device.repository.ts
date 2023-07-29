@@ -22,6 +22,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
     return this.findOne({
       where: {
         id,
+        isDeleted: false,
       },
     });
   }
@@ -32,6 +33,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .leftJoinAndSelect('devices.type', 'deviceTypes')
       .leftJoinAndSelect('devices.user', 'users')
       .where('devices.id = :deviceId', { deviceId })
+      .andWhere('devices.is_deleted = FALSE')
       .getOne();
   }
 
@@ -40,6 +42,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .select('devices')
       .leftJoinAndSelect('devices.type', 'deviceTypes')
       .leftJoinAndSelect('devices.user', 'users')
+      .where('devices.is_deleted = FALSE')
       .getMany();
   }
 }

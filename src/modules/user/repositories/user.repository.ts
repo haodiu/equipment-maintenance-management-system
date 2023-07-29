@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { Brackets, DataSource, Repository } from 'typeorm';
 
 import { UserEntity } from '../domains/entities/user.entity';
 
@@ -13,6 +13,7 @@ export class UserRepository extends Repository<UserEntity> {
     return this.findOne({
       where: {
         id,
+        isDeleted: false,
       },
     });
   }
@@ -21,6 +22,7 @@ export class UserRepository extends Repository<UserEntity> {
     return this.findOne({
       where: {
         email,
+        isDeleted: false,
       },
     });
   }
@@ -34,8 +36,15 @@ export class UserRepository extends Repository<UserEntity> {
     const queryBuilder = this.createQueryBuilder('user');
 
     queryBuilder
-      .where('user.id = :id', { id: options.id })
-      .orWhere('user.email = :email', { email: options.email });
+      .where('user.is_deleted = :isDeleted', { isDeleted: false })
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where('user.id = :id', { id: options.id }).orWhere(
+            'user.email = :email',
+            { email: options.email },
+          );
+        }),
+      );
 
     return queryBuilder.getOne();
   }
