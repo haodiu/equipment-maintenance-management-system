@@ -44,7 +44,7 @@ export class UserService {
     return user;
   }
 
-  async createUser(userRegisterDto: UserRegisterDto): Promise<UserDto> {
+  async createUser(userRegisterDto: UserRegisterDto) {
     const passwordHash = generateHash(userRegisterDto.password);
     const user = this.userRepository.create({
       email: userRegisterDto.email,
@@ -53,8 +53,6 @@ export class UserService {
     });
 
     await this.userRepository.save(user);
-
-    return new UserDto(user);
   }
 
   async updateUserProfile(

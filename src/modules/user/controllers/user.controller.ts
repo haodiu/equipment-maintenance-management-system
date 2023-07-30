@@ -45,20 +45,20 @@ export class UserController {
     return this.userService.getOneById(userId);
   }
 
-  @Put(':userId/profile')
-  @HttpCode(HttpStatus.OK)
-  async updateProfile(
-    @Param('userId') userId: number,
-    @Body() updateUserProfileDto: UpdateUserProfileDto,
-  ): Promise<UserDto> {
-    return this.userService.updateUserProfile(userId, updateUserProfileDto);
-  }
-
-  @Get(':userId/logbook')
+  @Get(':id/logbook')
   @HttpCode(HttpStatus.OK)
   async getAllByUserId(
     @Param('id') userId: number,
   ): Promise<LogbookDto | null> {
     return this.logbookService.getByUserId(userId);
+  }
+
+  @Put(':id/profile')
+  @HttpCode(HttpStatus.OK)
+  async updateProfile(
+    @Param('id') userId: number,
+    @Body() updateUserProfileDto: UpdateUserProfileDto,
+  ): Promise<UserDto> {
+    return this.userService.updateUserProfile(userId, updateUserProfileDto);
   }
 }

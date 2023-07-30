@@ -9,7 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 import { ROLE_TYPE } from '../../../constants';
 import { Auth, AuthUser } from '../../../decorators';
@@ -17,6 +17,7 @@ import { UserEntity } from '../../user/domains/entities/user.entity';
 import type { LiquidationDto } from '../domains/dtos/liquidation.dto';
 import { LiquidationInputDto } from '../domains/dtos/liquidation-input.dto';
 import { LiquidationQueryDto } from '../domains/dtos/liquidation-query.dto';
+import { LiquidationUpdateDto } from '../domains/dtos/liquidation-update.dto';
 import { LiquidationService } from '../services/liquidation.service';
 
 @Controller('liquidations')
@@ -25,7 +26,6 @@ export class LiquidationController {
   constructor(private readonly liquidationService: LiquidationService) {}
 
   @Get()
-  @ApiQuery({ name: 'approved', required: false })
   @HttpCode(HttpStatus.OK)
   getLiquidations(
     @Query() option: LiquidationQueryDto,
@@ -54,10 +54,10 @@ export class LiquidationController {
   @HttpCode(HttpStatus.OK)
   updateLiquidation(
     @Param('id') id: number,
-    @Body() liquidationInputDto: LiquidationInputDto,
+    @Body() liquidationUpdateDto: LiquidationUpdateDto,
     @AuthUser() user: UserEntity,
   ) {
-    return this.liquidationService.updateOne(id, liquidationInputDto, user);
+    return this.liquidationService.updateOne(id, liquidationUpdateDto, user);
   }
 
   @Post(':id/soft-delete')

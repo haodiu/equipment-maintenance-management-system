@@ -3,10 +3,10 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 import { Trim } from '../../../../decorators';
 
-export class LogbookConfirmDto {
+export class LiquidationUpdateDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Trim()
-  confirmedDescription: string;
+  readonly reason: string;
 }

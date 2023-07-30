@@ -10,11 +10,13 @@ import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not
 import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.exception';
 import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
+import type { UserEntity } from '../../user/domains/entities/user.entity';
 import { UserService } from '../../user/services/user.service';
 import { LogbookDto } from '../domains/dtos/logbook.dto';
+import type { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
-import type { LogbookUpdateDto } from '../domains/dtos/logbook-update.dto';
+import type { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
 import { LogbookTypeRepository } from '../repositories/logbook-type.repository';
@@ -50,7 +52,7 @@ export class LogbookService {
 
   @Transactional()
   async createLogbook(logbookCreateDto: LogbookCreateDto): Promise<LogbookDto> {
-    const { userId, deviceId, typeId } = logbookCreateDto;
+    const { userId, deviceId, typeId, description } = logbookCreateDto;
     const user = await this.userService.findOneById(userId);
 
     if (!user) {
@@ -92,6 +94,7 @@ export class LogbookService {
 
     const logbook = new LogbookEntity();
     logbook.status = LOGBOOK_STATUS.PENDING;
+    logbook.description = description;
     logbook.user = user;
     logbook.type = logbookType;
     logbook.device = device;
@@ -120,9 +123,30 @@ export class LogbookService {
     return new LogbookDto(logbook);
   }
 
-  async updateLogbook(
+  async confirmLogbookByUser(
     logbookId: number,
-    logbookUpdateDto: LogbookUpdateDto,
+    logbookConfirmDto: LogbookConfirmDto,
+    authUser: UserEntity,
+  ) {
+    const logbook = await this.logbookRepository.findOneById(logbookId);
+
+    if (!logbook) {
+      throw new LogbookNotFoundException('Logbook not found');
+    }
+
+    if (authUser.id !== logbook.user.id) {
+      throw new Error("User only update confirm user's logbook");
+    }
+
+    logbook.confirmed = true;
+    logbook.confirmedDescription = logbookConfirmDto.confirmedDescription;
+
+    await this.logbookRepository.save(logbook);
+  }
+
+  async updateStatus(
+    logbookId: number,
+    logbookUpdateStatus: LogbookUpdateStatusDto,
   ): Promise<LogbookDto> {
     const logbook = await this.logbookRepository.findOneById(logbookId);
 
@@ -130,16 +154,8 @@ export class LogbookService {
       throw new LogbookNotFoundException('Logbook not found');
     }
 
-    const { status, confirm } = logbookUpdateDto;
-
-    if (status) {
-      logbook.status = status;
-    }
-
-    if (confirm) {
-      logbook.confirmed = confirm.confirmed;
-      logbook.confirmedDescription = confirm.confirmedDescription;
-    }
+    const { status } = logbookUpdateStatus;
+    logbook.status = status;
 
     return new LogbookDto(logbook);
   }

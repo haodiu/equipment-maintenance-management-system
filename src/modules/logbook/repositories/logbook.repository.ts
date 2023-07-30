@@ -14,7 +14,8 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.device_id = :deviceId', { deviceId })
+      .where('logbooks.is_deleted = FALSE')
+      .andWhere('logbooks.device_id = :deviceId', { deviceId })
       .getMany();
   }
 
@@ -23,7 +24,8 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.id = :id', { id })
+      .where('logbooks.is_deleted = FALSE')
+      .andWhere('logbooks.id = :id', { id })
       .getOne();
   }
 
@@ -31,11 +33,14 @@ export class LogbookRepository extends Repository<LogbookEntity> {
     const query = this.createQueryBuilder('logbooks')
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType');
+      .leftJoinAndSelect('logbooks.type', 'logbookType')
+      .where('logbooks.is_deleted = FALSE');
 
     if (type) {
-      query.where('logbookType.type = :type', { type });
+      query.andWhere('logbookType.type = :type', { type });
     }
+
+    query.orderBy('logbooks.user_id', 'ASC');
 
     return query.getMany();
   }
@@ -47,7 +52,8 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')
       .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.device_id = :deviceId', { deviceId })
+      .where('logbooks.is_deleted = FALSE')
+      .andWhere('logbooks.device_id = :deviceId', { deviceId })
       .orderBy('logbooks.created_at', 'DESC')
       .getOne();
   }

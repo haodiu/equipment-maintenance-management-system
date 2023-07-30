@@ -109,7 +109,7 @@ export class DeviceService {
       device.type = type;
     }
 
-    if (userId) {
+    if (userId !== undefined) {
       const user = await this.userService.findOneById(userId);
 
       if (!user) {

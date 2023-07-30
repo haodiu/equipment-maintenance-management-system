@@ -7,6 +7,7 @@ import type { UserEntity } from '../../user/domains/entities/user.entity';
 import { LiquidationDto } from '../domains/dtos/liquidation.dto';
 import type { LiquidationInputDto } from '../domains/dtos/liquidation-input.dto';
 import type { LiquidationQueryDto } from '../domains/dtos/liquidation-query.dto';
+import type { LiquidationUpdateDto } from '../domains/dtos/liquidation-update.dto';
 import { LiquidationRepository } from '../repositories/liquidation.repository';
 
 @Injectable()
@@ -69,10 +70,10 @@ export class LiquidationService {
 
   async updateOne(
     liquidationId: number,
-    liquidationInputDto: LiquidationInputDto,
+    liquidationUpdateDto: LiquidationUpdateDto,
     authUser: UserEntity,
   ): Promise<LiquidationDto> {
-    const reason = liquidationInputDto.reason;
+    const reason = liquidationUpdateDto.reason;
     const liquidation = await this.liquidationRepository.findById(
       liquidationId,
     );

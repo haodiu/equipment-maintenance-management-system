@@ -23,9 +23,6 @@ export class LogbookDto extends AbstractDto {
   confirmedDescription?: string;
 
   @ApiProperty()
-  isDeleted?: boolean;
-
-  @ApiProperty()
   deviceId?: number;
 
   @ApiProperty()
@@ -51,7 +48,6 @@ export class LogbookDto extends AbstractDto {
     this.type = logbookEntity.type.type;
     this.confirmed = logbookEntity.confirmed;
     this.confirmedDescription = logbookEntity.confirmedDescription;
-    this.isDeleted = logbookEntity.isDeleted;
     this.deviceId = logbookEntity.device.id;
     this.deviceName = logbookEntity.device.name;
     this.deviceImage = logbookEntity.device.image;

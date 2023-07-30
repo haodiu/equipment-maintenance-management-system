@@ -9,12 +9,16 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
+import { ROLE_TYPE } from '../../../constants';
+import { Auth, AuthUser } from '../../../decorators';
+import { UserEntity } from '../../user/domains/entities/user.entity';
 import type { LogbookDto } from '../domains/dtos/logbook.dto';
+import { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
-import { LogbookUpdateDto } from '../domains/dtos/logbook-update.dto';
+import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
 import { LogbookService } from '../services/logbook.service';
 
 @Controller('logbooks')
@@ -31,7 +35,6 @@ export class LogbookController {
   }
 
   @Get()
-  @ApiQuery({ type: 'type', required: false })
   @HttpCode(HttpStatus.OK)
   getAllLogbooks(@Query() option?: LogbookQueryDto): Promise<LogbookDto[]> {
     return this.logbookService.getAll(option);
@@ -43,13 +46,28 @@ export class LogbookController {
     return this.logbookService.getOne(logbookId);
   }
 
-  @Put(':id/update')
+  @Put(':id/update-status')
   @HttpCode(HttpStatus.OK)
   updateLogBook(
     @Param('id') logbookId: number,
-    @Body() logbookUpdate: LogbookUpdateDto,
+    @Body() logbookUpdateStatus: LogbookUpdateStatusDto,
   ): Promise<LogbookDto> {
-    return this.logbookService.updateLogbook(logbookId, logbookUpdate);
+    return this.logbookService.updateStatus(logbookId, logbookUpdateStatus);
+  }
+
+  @Put(':id/confirm')
+  @Auth([ROLE_TYPE.USER])
+  @HttpCode(HttpStatus.OK)
+  confirmLogBook(
+    @Param('id') logbookId: number,
+    @Body() logbookConfirm: LogbookConfirmDto,
+    @AuthUser() user: UserEntity,
+  ) {
+    return this.logbookService.confirmLogbookByUser(
+      logbookId,
+      logbookConfirm,
+      user,
+    );
   }
 
   @Post(':id/soft-delete')
