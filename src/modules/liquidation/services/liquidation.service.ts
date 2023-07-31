@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { DEVICE_STATUS } from '../../../constants/device-status';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { LiquidationNotFoundException } from '../../../exceptions/liquidation-not-found.exception';
 import { DeviceService } from '../../device/services/device.service';
@@ -57,6 +58,10 @@ export class LiquidationService {
 
     if (!device) {
       throw new DeviceNotFoundException('Device not found');
+    }
+
+    if (device.deviceStatus !== DEVICE_STATUS.NOT_USED) {
+      throw new Error('Device in use by user');
     }
 
     const liquidation = this.liquidationRepository.create({
