@@ -28,6 +28,13 @@ export class UserController {
     private readonly logbookService: LogbookService,
   ) {}
 
+  @Get('device-users')
+  @HttpCode(HttpStatus.OK)
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  getDeviceUsers(): Promise<UserDto[] | null> {
+    return this.userService.getDeviceUser();
+  }
+
   @Post(':id/change-password')
   @HttpCode(HttpStatus.OK)
   @Auth([ROLE_TYPE.USER])

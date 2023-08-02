@@ -15,6 +15,7 @@ import { Auth } from '../../../decorators';
 import type { LogbookDto } from '../../logbook/domains/dtos/logbook.dto';
 import { LogbookService } from '../../logbook/services/logbook.service';
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';
+import type { DeviceTypeDto } from '../domains/dtos/device-type.dto';
 import { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import { DeviceService } from '../services/device.service';
 
@@ -27,6 +28,7 @@ export class DeviceController {
   ) {}
 
   @Post()
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   createDevice(
     @Body() inputDeviceDto: InputDeviceDto,
@@ -36,8 +38,16 @@ export class DeviceController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   getAllDevice(): Promise<DeviceResponseDto[]> {
     return this.deviceService.getAll();
+  }
+
+  @Get('types')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  getDeviceTypes(): Promise<DeviceTypeDto[]> {
+    return this.deviceService.getAllDeviceType();
   }
 
   @Get(':id')

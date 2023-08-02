@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import type { RoleType } from 'aws-sdk/clients/cognitoidentity';
 import { Brackets, DataSource, Repository } from 'typeorm';
 
 import { UserEntity } from '../domains/entities/user.entity';
@@ -13,6 +14,15 @@ export class UserRepository extends Repository<UserEntity> {
     return this.findOne({
       where: {
         id,
+        isDeleted: false,
+      },
+    });
+  }
+
+  async findByRole(role: RoleType): Promise<UserEntity[] | null> {
+    return this.find({
+      where: {
+        role,
         isDeleted: false,
       },
     });

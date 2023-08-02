@@ -11,6 +11,7 @@ import type { DeviceEntity } from '../domains/entities/device.entity';
 import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
 import { DeviceRepository } from '../repositories/device.repository';
 import { DeviceTypeRepository } from '../repositories/device-type.repisitory';
+import { DeviceTypeDto } from './../domains/dtos/device-type.dto';
 
 @Injectable()
 export class DeviceService {
@@ -142,5 +143,11 @@ export class DeviceService {
     device.isDeleted = true;
 
     await this.deviceRepository.save(device);
+  }
+
+  async getAllDeviceType(): Promise<DeviceTypeDto[]> {
+    const deviceTypes = await this.deviceTypeRepository.find();
+
+    return deviceTypes.map((deviceType) => new DeviceTypeDto(deviceType));
   }
 }

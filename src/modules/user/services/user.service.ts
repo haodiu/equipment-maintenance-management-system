@@ -14,6 +14,16 @@ import { UserRepository } from './../repositories/user.repository';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
+  async getDeviceUser(): Promise<UserDto[] | null> {
+    const users = await this.userRepository.findByRole(ROLE_TYPE.USER);
+
+    if (!users) {
+      throw new UserNotFoundException('User not found');
+    }
+
+    return users.map((user) => new UserDto(user));
+  }
+
   async getOneById(userId: number): Promise<UserDto | null> {
     const user = await this.userRepository.findOneByFilter({ id: userId });
 
