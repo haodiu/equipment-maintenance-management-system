@@ -16,6 +16,7 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .leftJoinAndSelect('logbooks.type', 'logbookType')
       .where('logbooks.is_deleted = FALSE')
       .andWhere('logbooks.device_id = :deviceId', { deviceId })
+      .orderBy('logbooks.updated_at', 'DESC')
       .getMany();
   }
 

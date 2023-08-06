@@ -60,7 +60,7 @@ export class DeviceEntity extends AbstractEntity implements IDeviceEntity {
   isDeleted: boolean;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.devices)
-  user: UserEntity;
+  user: UserEntity | null;
 
   @ManyToOne(
     () => DeviceTypeEntity,

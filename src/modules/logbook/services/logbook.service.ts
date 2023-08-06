@@ -157,6 +157,8 @@ export class LogbookService {
     const { status } = logbookUpdateStatus;
     logbook.status = status;
 
+    await this.logbookRepository.save(logbook);
+
     return new LogbookDto(logbook);
   }
 

@@ -34,7 +34,7 @@ export class LiquidationController {
   }
 
   @Post()
-  @Auth([ROLE_TYPE.ADMIN, ROLE_TYPE.MAINTENANCE_STAFF])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   createLiquidation(
     @Body() liquidationInputDto: LiquidationInputDto,
@@ -50,7 +50,7 @@ export class LiquidationController {
   }
 
   @Put(':id/update')
-  @Auth([ROLE_TYPE.ADMIN, ROLE_TYPE.MAINTENANCE_STAFF])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   updateLiquidation(
     @Param('id') id: number,

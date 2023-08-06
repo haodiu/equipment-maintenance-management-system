@@ -91,7 +91,11 @@ export class UserService {
       throw new ForbiddenException('Only change password yourself');
     }
 
-    const { oldPassword, newPassword } = changePasswordDto;
+    const { oldPassword, newPassword, confirmPassword } = changePasswordDto;
+
+    if (newPassword !== confirmPassword) {
+      throw new Error('Confirmation password is not the same');
+    }
 
     const isPasswordValid = await validateHash(oldPassword, authUser.password);
 
@@ -104,5 +108,9 @@ export class UserService {
     authUser.password = newPasswordHash;
 
     await this.userRepository.save(authUser);
+  }
+
+  getProfile(user: UserEntity): UserDto {
+    return new UserDto(user);
   }
 }

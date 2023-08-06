@@ -35,6 +35,7 @@ export class LogbookController {
   }
 
   @Get()
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   getAllLogbooks(@Query() option?: LogbookQueryDto): Promise<LogbookDto[]> {
     return this.logbookService.getAll(option);

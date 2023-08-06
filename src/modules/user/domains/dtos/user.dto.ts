@@ -31,6 +31,9 @@ export class UserDto extends AbstractDto {
   @ApiPropertyOptional()
   role: string;
 
+  @ApiPropertyOptional()
+  avatar: string;
+
   constructor(userEntity: UserEntity) {
     super(userEntity);
     this.id = userEntity.id;
@@ -42,5 +45,6 @@ export class UserDto extends AbstractDto {
     this.birthday = userEntity.birthday;
     this.address = userEntity.address;
     this.role = userEntity.role;
+    this.avatar = userEntity.avatar;
   }
 }

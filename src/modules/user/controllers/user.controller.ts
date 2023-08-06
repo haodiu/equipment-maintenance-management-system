@@ -35,9 +35,16 @@ export class UserController {
     return this.userService.getDeviceUser();
   }
 
+  @Get('profile')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
+  @HttpCode(HttpStatus.OK)
+  getProfile(@AuthUser() user: UserEntity) {
+    return this.userService.getProfile(user);
+  }
+
   @Post(':id/change-password')
   @HttpCode(HttpStatus.OK)
-  @Auth([ROLE_TYPE.USER])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   changePassword(
     @AuthUser() user: UserEntity,
     @Param('id') userId: number,

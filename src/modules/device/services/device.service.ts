@@ -110,7 +110,10 @@ export class DeviceService {
       device.type = type;
     }
 
-    if (userId !== undefined) {
+    if (userId === 0) {
+      device.user = null;
+      device.deviceStatus = DEVICE_STATUS.NOT_USED;
+    } else if (userId !== undefined) {
       const user = await this.userService.findOneById(userId);
 
       if (!user) {
@@ -118,11 +121,11 @@ export class DeviceService {
       }
 
       device.user = user;
+      device.deviceStatus = deviceStatus ?? device.deviceStatus;
     }
 
     // Update the device properties with object destructuring
     device.name = name ?? device.name;
-    device.deviceStatus = deviceStatus ?? device.deviceStatus;
     device.purchaseDate = purchaseDate ?? device.purchaseDate;
     device.purchaseLocation = purchaseLocation ?? device.purchaseLocation;
     device.price = price ?? device.price;
@@ -134,10 +137,17 @@ export class DeviceService {
   }
 
   async softDelete(deviceId: number) {
-    const device = await this.deviceRepository.findById(deviceId);
+    const device = await this.deviceRepository.getDetail(deviceId);
 
     if (!device) {
       throw new DeviceNotFoundException('Device not found');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (device.user) {
+      throw new Error(
+        'Cannot delete the device because it is in use by a user',
+      );
     }
 
     device.isDeleted = true;

@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { DeviceStatusType } from '../../../../constants/device-status';
 import { IsNullable, Trim } from '../../../../decorators';
@@ -7,7 +7,6 @@ import { IsNullable, Trim } from '../../../../decorators';
 export class InputDeviceDto {
   @ApiPropertyOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   name: string;
 
@@ -27,21 +26,18 @@ export class InputDeviceDto {
   })
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   deviceStatus?: DeviceStatusType;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   purchaseLocation?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   purchaseDate?: string;
 
@@ -52,7 +48,6 @@ export class InputDeviceDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   image?: string;
 }

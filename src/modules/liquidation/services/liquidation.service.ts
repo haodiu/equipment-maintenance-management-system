@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { LiquidationNotFoundException } from '../../../exceptions/liquidation-not-found.exception';
+import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
 import type { UserEntity } from '../../user/domains/entities/user.entity';
 import { LiquidationDto } from '../domains/dtos/liquidation.dto';
@@ -16,6 +17,7 @@ export class LiquidationService {
   constructor(
     private readonly liquidationRepository: LiquidationRepository,
     private readonly deviceService: DeviceService,
+    private readonly deviceRepository: DeviceRepository,
   ) {}
 
   async getDetail(liquidationId: number): Promise<LiquidationDto | null> {
@@ -70,7 +72,10 @@ export class LiquidationService {
       device,
     });
 
+    device.deviceStatus = DEVICE_STATUS.PENDING_DISPOSAL;
+
     await this.liquidationRepository.save(liquidation);
+    await this.deviceRepository.save(device);
   }
 
   async updateOne(
