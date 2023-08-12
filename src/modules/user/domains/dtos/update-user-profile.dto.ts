@@ -45,4 +45,11 @@ export class UpdateUserProfileDto {
   @IsNotEmpty()
   @Trim()
   readonly address: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @Trim()
+  readonly avatar: string;
 }

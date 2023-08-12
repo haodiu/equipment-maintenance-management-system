@@ -44,7 +44,7 @@ export class DeviceController {
   }
 
   @Get('types')
-  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   @HttpCode(HttpStatus.OK)
   getDeviceTypes(): Promise<DeviceTypeDto[]> {
     return this.deviceService.getAllDeviceType();

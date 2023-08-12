@@ -17,7 +17,7 @@ import type { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
 import { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
-import type { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
+import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
 import { LogbookTypeRepository } from '../repositories/logbook-type.repository';
@@ -145,6 +145,7 @@ export class LogbookService {
     await this.logbookRepository.save(logbook);
   }
 
+  @Transactional()
   async updateStatus(
     logbookId: number,
     logbookUpdateStatus: LogbookUpdateStatusDto,
@@ -158,7 +159,22 @@ export class LogbookService {
     const { status } = logbookUpdateStatus;
     logbook.status = status;
 
+    const device = await this.deviceService.findById(logbook.device.id);
+
+    if (!device) {
+      throw new DeviceNotFoundException('Device not found');
+    }
+
+    if (
+      logbook.status === LOGBOOK_STATUS.COMPLETED &&
+      logbook.type.type !== LOGBOOK_TYPE.REPAIR
+    ) {
+      device.deviceStatus = DEVICE_STATUS.NOT_USED;
+      device.user = null;
+    }
+
     await this.logbookRepository.save(logbook);
+    await this.deviceRepository.save(device);
 
     return new LogbookDto(logbook);
   }
