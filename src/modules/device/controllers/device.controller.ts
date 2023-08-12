@@ -38,7 +38,7 @@ export class DeviceController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   getAllDevice(): Promise<DeviceResponseDto[]> {
     return this.deviceService.getAll();
   }

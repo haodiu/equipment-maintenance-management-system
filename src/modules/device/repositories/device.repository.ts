@@ -43,6 +43,16 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .leftJoinAndSelect('devices.type', 'deviceTypes')
       .leftJoinAndSelect('devices.user', 'users')
       .where('devices.is_deleted = FALSE')
+      .orderBy('devices.id', 'ASC')
+      .getMany();
+  }
+
+  async getAllByUserId(userId: number): Promise<DeviceEntity[] | null> {
+    return this.createQueryBuilder('devices')
+      .leftJoinAndSelect('devices.type', 'device_types')
+      .where('devices.user_id = :userId', { userId })
+      .andWhere('devices.is_deleted = FALSE')
+      .orderBy('devices.id', 'ASC')
       .getMany();
   }
 }

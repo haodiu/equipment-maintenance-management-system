@@ -5,12 +5,12 @@ import { LogbookStatusType } from './../../../../constants/logbook-status';
 export class LogbookUpdateStatusDto {
   @ApiProperty()
   @IsIn([
-    'pending',
-    'confirmed',
-    'rejected',
-    'in_progress',
-    'completed',
-    'canceled',
+    'Đang chờ',
+    'Đã xác nhận',
+    'Đã từ chối',
+    'Đang thực hiện',
+    'Đã hoàn thành',
+    'Đã huỷ',
   ])
   status: LogbookStatusType;
 }

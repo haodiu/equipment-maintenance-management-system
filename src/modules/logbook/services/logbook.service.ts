@@ -16,6 +16,7 @@ import { LogbookDto } from '../domains/dtos/logbook.dto';
 import type { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
+import { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
 import type { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
@@ -188,5 +189,16 @@ export class LogbookService {
     }
 
     return new LogbookDto(logbook);
+  }
+
+  async getLogbookTypes(): Promise<LogbookTypeDto[]> {
+    const types = await this.logbookTypeRepository.find();
+
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!types) {
+      throw new Error('LogbookType not found');
+    }
+
+    return types.map((logbookType) => new LogbookTypeDto(logbookType));
   }
 }

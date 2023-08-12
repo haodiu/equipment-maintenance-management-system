@@ -1,9 +1,15 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 
 import { generateHash, validateHash } from '../../../common/utils';
 import { ROLE_TYPE } from '../../../constants';
 import { UserNotFoundException } from '../../../exceptions';
 import type { UserRegisterDto } from '../../auth/dtos/user-register.dto';
+import { DeviceService } from '../../device/services/device.service';
 import type { ChangePasswordDto } from '../domains/dtos/change-password-dto';
 import type { UpdateUserProfileDto } from '../domains/dtos/update-user-profile.dto';
 import { UserDto } from '../domains/dtos/user.dto';
@@ -12,7 +18,11 @@ import { UserRepository } from './../repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    @Inject(forwardRef(() => DeviceService))
+    private readonly deviceService: DeviceService,
+  ) {}
 
   async getDeviceUser(): Promise<UserDto[] | null> {
     const users = await this.userRepository.findByRole(ROLE_TYPE.USER);
@@ -112,5 +122,9 @@ export class UserService {
 
   getProfile(user: UserEntity): UserDto {
     return new UserDto(user);
+  }
+
+  getDeviceByUserId(userId: number) {
+    return this.deviceService.getDeviceByUserId(userId);
   }
 }

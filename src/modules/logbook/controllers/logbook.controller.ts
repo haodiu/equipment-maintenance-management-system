@@ -41,6 +41,13 @@ export class LogbookController {
     return this.logbookService.getAll(option);
   }
 
+  @Get('types')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
+  @HttpCode(HttpStatus.OK)
+  getLogbookTypes() {
+    return this.logbookService.getLogbookTypes();
+  }
+
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   getOne(@Param('id') logbookId: number): Promise<LogbookDto> {

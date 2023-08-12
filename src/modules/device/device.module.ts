@@ -10,7 +10,7 @@ import { DeviceService } from './services/device.service';
 @Module({
   imports: [forwardRef(() => LogbookModule), forwardRef(() => UserModule)],
   controllers: [DeviceController],
-  exports: [DeviceRepository, DeviceService],
-  providers: [DeviceRepository, DeviceService, DeviceTypeRepository],
+  exports: [DeviceService, DeviceRepository],
+  providers: [DeviceService, DeviceRepository, DeviceTypeRepository],
 })
 export class DeviceModule {}

@@ -30,7 +30,7 @@ export class UserController {
 
   @Get('device-users')
   @HttpCode(HttpStatus.OK)
-  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   getDeviceUsers(): Promise<UserDto[] | null> {
     return this.userService.getDeviceUser();
   }
@@ -74,5 +74,12 @@ export class UserController {
     @Body() updateUserProfileDto: UpdateUserProfileDto,
   ): Promise<UserDto> {
     return this.userService.updateUserProfile(userId, updateUserProfileDto);
+  }
+
+  @Get(':id/devices')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
+  @HttpCode(HttpStatus.OK)
+  getDevices(@Param('id') id: number) {
+    return this.userService.getDeviceByUserId(id);
   }
 }

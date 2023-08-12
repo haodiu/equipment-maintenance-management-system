@@ -1,1 +1,0 @@
-export const OS_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGUSR1', 'SIGUSR2'];

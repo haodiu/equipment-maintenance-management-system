@@ -87,7 +87,6 @@ export class DeviceService {
       name,
       typeId,
       userId,
-      deviceStatus,
       purchaseDate,
       purchaseLocation,
       price,
@@ -121,7 +120,7 @@ export class DeviceService {
       }
 
       device.user = user;
-      device.deviceStatus = deviceStatus ?? device.deviceStatus;
+      device.deviceStatus = DEVICE_STATUS.IN_USE;
     }
 
     // Update the device properties with object destructuring
@@ -159,5 +158,15 @@ export class DeviceService {
     const deviceTypes = await this.deviceTypeRepository.find();
 
     return deviceTypes.map((deviceType) => new DeviceTypeDto(deviceType));
+  }
+
+  async getDeviceByUserId(userId: number): Promise<DeviceResponseDto[]> {
+    const devices = await this.deviceRepository.getAllByUserId(userId);
+
+    if (!devices) {
+      throw new DeviceNotFoundException('Device not found');
+    }
+
+    return devices.map((device) => new DeviceResponseDto(device));
   }
 }

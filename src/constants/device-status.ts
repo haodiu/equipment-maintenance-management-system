@@ -1,12 +1,12 @@
 import { type ValueOf } from '../interfaces';
 export const DEVICE_STATUS = {
-  IN_USE: 'in_use',
-  NOT_USED: 'not_used',
-  NEED_REPAIR: 'need_repair',
-  NEED_REPLACE: 'need_replace',
-  NEED_RECALL: 'need_recall',
-  PENDING_DISPOSAL: 'pending_disposal',
-  DISPOSED: 'disposed',
+  IN_USE: 'Đang sử dụng',
+  NOT_USED: 'Chưa sử dụng',
+  NEED_REPAIR: 'Cần sửa chữa',
+  NEED_REPLACE: 'Cần thay thế',
+  NEED_RECALL: 'Cần thu hồi',
+  PENDING_DISPOSAL: 'Đề xuất thanh lý',
+  DISPOSED: 'Đã thanh lý',
 } as const;
 
 export type DeviceStatusType = ValueOf<typeof DEVICE_STATUS>;

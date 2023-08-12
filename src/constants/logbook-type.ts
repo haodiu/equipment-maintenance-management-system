@@ -1,5 +1,5 @@
 export const LOGBOOK_TYPE = {
-  RECALL: 'recall',
-  REPLACE: 'replace',
-  REPAIR: 'repair',
+  RECALL: 'Thu hồi',
+  REPLACE: 'Thay thế',
+  REPAIR: 'Sửa chữa',
 } as const;
