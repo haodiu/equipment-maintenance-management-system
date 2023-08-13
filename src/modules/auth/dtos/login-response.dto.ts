@@ -7,6 +7,9 @@ export class LoginResponseDto {
   id: number;
 
   @ApiPropertyOptional()
+  name: string;
+
+  @ApiPropertyOptional()
   avatar: string;
 
   @ApiProperty()
@@ -17,6 +20,7 @@ export class LoginResponseDto {
 
   constructor(user: UserEntity, accessToken: string) {
     this.id = user.id;
+    this.name = user.name;
     this.avatar = user.avatar;
     this.role = user.role;
     this.accessToken = accessToken;

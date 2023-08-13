@@ -55,4 +55,11 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .orderBy('devices.id', 'ASC')
       .getMany();
   }
+
+  async findAllByType(deviceType: string): Promise<[DeviceEntity[], number]> {
+    return this.createQueryBuilder('devices')
+      .leftJoinAndSelect('devices.type', 'deviceTypes')
+      .where('deviceTypes.type = :deviceType', { deviceType })
+      .getManyAndCount();
+  }
 }

@@ -18,6 +18,7 @@ import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
 import { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
 import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
+import { NumLogbookByTypeDto } from '../domains/dtos/num-logbook-type.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
 import { LogbookTypeRepository } from '../repositories/logbook-type.repository';
@@ -216,5 +217,14 @@ export class LogbookService {
     }
 
     return types.map((logbookType) => new LogbookTypeDto(logbookType));
+  }
+
+  async getLogbookTypeCounts(): Promise<NumLogbookByTypeDto[]> {
+    const numLogbookByType =
+      await this.logbookTypeRepository.getLogbookTypeCounts();
+
+    return numLogbookByType.map(
+      (logbookType) => new NumLogbookByTypeDto(logbookType),
+    );
   }
 }

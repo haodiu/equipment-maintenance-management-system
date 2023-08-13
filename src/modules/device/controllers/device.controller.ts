@@ -17,6 +17,7 @@ import { LogbookService } from '../../logbook/services/logbook.service';
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { DeviceTypeDto } from '../domains/dtos/device-type.dto';
 import { InputDeviceDto } from '../domains/dtos/input-device.dto';
+import type { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
 import { DeviceService } from '../services/device.service';
 
 @Controller('devices')
@@ -48,6 +49,13 @@ export class DeviceController {
   @HttpCode(HttpStatus.OK)
   getDeviceTypes(): Promise<DeviceTypeDto[]> {
     return this.deviceService.getAllDeviceType();
+  }
+
+  @Get('device-type-count')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  getDeviceTypeAmount(): Promise<NumDeviceByTypeDto[]> {
+    return this.deviceService.getDeviceTypeCounts();
   }
 
   @Get(':id')

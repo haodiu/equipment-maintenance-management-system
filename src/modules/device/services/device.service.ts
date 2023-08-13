@@ -7,6 +7,7 @@ import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not
 import { UserService } from '../../user/services/user.service';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
+import { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
 import type { DeviceEntity } from '../domains/entities/device.entity';
 import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
 import { DeviceRepository } from '../repositories/device.repository';
@@ -168,5 +169,14 @@ export class DeviceService {
     }
 
     return devices.map((device) => new DeviceResponseDto(device));
+  }
+
+  async getDeviceTypeCounts(): Promise<NumDeviceByTypeDto[]> {
+    const numDeviceByType =
+      await this.deviceTypeRepository.getDeviceTypeCounts();
+
+    return numDeviceByType.map(
+      (deviceType) => new NumDeviceByTypeDto(deviceType),
+    );
   }
 }

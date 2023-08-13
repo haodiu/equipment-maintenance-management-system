@@ -16,4 +16,21 @@ export class LogbookTypeRepository extends Repository<LogbookTypeEntity> {
       },
     });
   }
+
+  async getLogbookTypeCounts(): Promise<
+    Array<{ typeName: string; count: number }>
+  > {
+    const queryResult = await this.createQueryBuilder('logbookType')
+      .leftJoinAndSelect('logbookType.logbooks', 'logbooks')
+      .select('logbookType.type')
+      .addSelect('COUNT(logbooks.id)', 'count')
+      .groupBy('logbookType.id')
+      .getRawMany();
+
+    return queryResult.map((result) => ({
+      typeName: result.logbookType_type,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      count: Number.parseInt(result.count, 10),
+    }));
+  }
 }

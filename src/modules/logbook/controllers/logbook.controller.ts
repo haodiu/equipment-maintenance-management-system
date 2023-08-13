@@ -19,6 +19,7 @@ import { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
 import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
+import type { NumLogbookByTypeDto } from '../domains/dtos/num-logbook-type.dto';
 import { LogbookService } from '../services/logbook.service';
 
 @Controller('logbooks')
@@ -46,6 +47,13 @@ export class LogbookController {
   @HttpCode(HttpStatus.OK)
   getLogbookTypes() {
     return this.logbookService.getLogbookTypes();
+  }
+
+  @Get('logbook-type-count')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  getDeviceTypeAmount(): Promise<NumLogbookByTypeDto[]> {
+    return this.logbookService.getLogbookTypeCounts();
   }
 
   @Get(':id')
