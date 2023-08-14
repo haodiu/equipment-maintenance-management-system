@@ -10,10 +10,10 @@ import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not
 import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.exception';
 import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
-import type { UserEntity } from '../../user/domains/entities/user.entity';
+import { UserEntity } from '../../user/domains/entities/user.entity';
 import { UserService } from '../../user/services/user.service';
 import { LogbookDto } from '../domains/dtos/logbook.dto';
-import type { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
+import { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
 import { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
@@ -125,6 +125,7 @@ export class LogbookService {
     return new LogbookDto(logbook);
   }
 
+  @Transactional()
   async confirmLogbookByUser(
     logbookId: number,
     logbookConfirmDto: LogbookConfirmDto,
@@ -142,6 +143,15 @@ export class LogbookService {
 
     logbook.confirmed = true;
     logbook.confirmedDescription = logbookConfirmDto.confirmedDescription;
+
+    if (
+      logbook.status === LOGBOOK_STATUS.COMPLETED &&
+      logbook.type.type === LOGBOOK_TYPE.REPAIR
+    ) {
+      const device = logbook.device;
+      device.deviceStatus = DEVICE_STATUS.IN_USE;
+      await this.deviceRepository.save(device);
+    }
 
     await this.logbookRepository.save(logbook);
   }

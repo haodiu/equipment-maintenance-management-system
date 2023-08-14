@@ -26,6 +26,7 @@ export class LiquidationController {
   constructor(private readonly liquidationService: LiquidationService) {}
 
   @Get()
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   getLiquidations(
     @Query() option: LiquidationQueryDto,

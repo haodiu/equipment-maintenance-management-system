@@ -8,6 +8,9 @@ export class LiquidationDto extends AbstractDto {
   id: number;
 
   @ApiProperty()
+  deviceImage: string;
+
+  @ApiProperty()
   reason: string;
 
   @ApiProperty()
@@ -31,6 +34,7 @@ export class LiquidationDto extends AbstractDto {
   constructor(liquidationEntity: LiquidationEntity) {
     super(liquidationEntity);
     this.id = liquidationEntity.id;
+    this.deviceImage = liquidationEntity.device.image;
     this.reason = liquidationEntity.reason;
     this.approved = liquidationEntity.approved;
     this.deviceId = liquidationEntity.device.id;
