@@ -1,5 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  Matches,
+  ValidateIf,
+} from 'class-validator';
 
 import { DeviceStatusType } from '../../../../constants/device-status';
 import { IsNullable, Trim } from '../../../../decorators';
@@ -39,6 +45,12 @@ export class InputDeviceDto {
   @IsOptional()
   @IsString()
   @Trim()
+  @ValidateIf((o) => o.purchaseDate !== null && o.purchaseDate !== undefined)
+  @Matches(/^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/, {
+    message: 'Invalid date format. Use dd/mm/yyyy.',
+    each: true,
+    always: false,
+  })
   purchaseDate?: string;
 
   @ApiPropertyOptional()

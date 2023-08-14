@@ -1,55 +1,70 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Length,
+  Matches,
+  ValidateIf,
+} from 'class-validator';
 
+import { IsNullable } from '../../../../decorators';
 import { Trim } from '../../../../decorators/transform.decorators';
 
 export class UpdateUserProfileDto {
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
-  @Trim()
+  @IsNumberString()
+  @Length(10, 10)
   readonly phone: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
-  @Trim()
+  @IsNumberString()
+  @Length(12, 12)
   readonly citizenId: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   readonly name: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   readonly gender: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @Trim()
+  @ValidateIf((o) => o.birthday !== null && o.birthday !== undefined)
+  @Matches(/^(0?[1-9]|[12]\d|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/, {
+    message: 'Invalid date format. Use dd/mm/yyyy.',
+    each: true,
+    always: false,
+  })
   readonly birthday: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   readonly address: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsNullable()
   @IsString()
-  @IsNotEmpty()
   @Trim()
   readonly avatar: string;
 }
