@@ -8,8 +8,10 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { ROLE_TYPE } from '../../../constants';
 import { Auth, AuthUser } from '../../../decorators';
@@ -32,6 +34,14 @@ export class LiquidationController {
     @Query() option: LiquidationQueryDto,
   ): Promise<LiquidationDto[] | null> {
     return this.liquidationService.getAll(option);
+  }
+
+  @Get('/download-info')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Download user information successfully' })
+  downloadUserInfo(@Res() res: Response) {
+    return this.liquidationService.downloadLiquidationInfo(res);
   }
 
   @Post()

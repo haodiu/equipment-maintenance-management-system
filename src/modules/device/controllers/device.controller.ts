@@ -7,8 +7,10 @@ import {
   Param,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 
 import { ROLE_TYPE } from '../../../constants';
 import { Auth } from '../../../decorators';
@@ -90,5 +92,14 @@ export class DeviceController {
   @HttpCode(HttpStatus.OK)
   deleteDevice(@Param('id') deviceId: number) {
     return this.deviceService.softDelete(deviceId);
+  }
+
+  @Get(':id/download-logbooks')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  @ApiParam({ name: 'id', description: 'Device ID' })
+  @ApiOkResponse({ description: 'Download device logbooks successfully' })
+  downloadUserInfo(@Param('id') liquidationId: number, @Res() res: Response) {
+    return this.deviceService.downloadLogbooksInfo(liquidationId, res);
   }
 }

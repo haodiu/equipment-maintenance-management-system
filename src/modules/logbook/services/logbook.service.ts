@@ -40,6 +40,12 @@ export class LogbookService {
     return logbooks.map((logbook) => new LogbookDto(logbook));
   }
 
+  async getAllEntityByDeviceId(
+    deviceId: number,
+  ): Promise<LogbookEntity[] | null> {
+    return this.logbookRepository.findByDeviceId(deviceId);
+  }
+
   async findLastOneByDeviceId(deviceId: number): Promise<LogbookDto | null> {
     const logbook = await this.logbookRepository.findLastLogbookByUserId(
       deviceId,

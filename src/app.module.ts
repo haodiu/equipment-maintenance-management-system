@@ -11,6 +11,7 @@ import {
 
 import { AuthModule } from './modules/auth/auth.module';
 import { DeviceModule } from './modules/device/device.module';
+import { FileModule } from './modules/file/file.module';
 import { HealthCheckerModule } from './modules/health/health.module';
 import { LiquidationModule } from './modules/liquidation/liquidation.module';
 import { LogbookModule } from './modules/logbook/logbook.module';
@@ -51,6 +52,7 @@ import { SharedModule } from './shared/shared.module';
     LogbookModule,
     DeviceModule,
     LiquidationModule,
+    FileModule,
   ],
   providers: [],
 })

@@ -1,12 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { LiquidationNotFoundException } from '../../../exceptions/liquidation-not-found.exception';
 import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
+import { FileService } from '../../file/services/file.service';
 import type { UserEntity } from '../../user/domains/entities/user.entity';
 import { LiquidationDto } from '../domains/dtos/liquidation.dto';
+import { LiquidationDownloadDto } from '../domains/dtos/liquidation-download.dto';
 import type { LiquidationInputDto } from '../domains/dtos/liquidation-input.dto';
 import type { LiquidationQueryDto } from '../domains/dtos/liquidation-query.dto';
 import type { LiquidationUpdateDto } from '../domains/dtos/liquidation-update.dto';
@@ -18,6 +21,7 @@ export class LiquidationService {
     private readonly liquidationRepository: LiquidationRepository,
     private readonly deviceService: DeviceService,
     private readonly deviceRepository: DeviceRepository,
+    private readonly fileService: FileService,
   ) {}
 
   async getDetail(liquidationId: number): Promise<LiquidationDto | null> {
@@ -126,5 +130,29 @@ export class LiquidationService {
     liquidation.isDeleted = true;
 
     await this.liquidationRepository.save(liquidation);
+  }
+
+  async getLiquidationsDownloadInfo(): Promise<LiquidationDownloadDto[]> {
+    const liquidations = await this.liquidationRepository.findAll();
+
+    if (!liquidations) {
+      throw new LiquidationNotFoundException('Liquidation not found');
+    }
+
+    return liquidations.map(
+      (liquidation) => new LiquidationDownloadDto(liquidation),
+    );
+  }
+
+  /**
+   * Downloads the user information as an Excel file.
+   * @param {number} userId - The ID of the user.
+   * @param {Response} res - The response object to send the file download.
+   * @returns {Promise<void>} - A promise that resolves when the file download is completed.
+   */
+  async downloadLiquidationInfo(@Res() res: Response) {
+    const data: LiquidationDownloadDto[] =
+      await this.getLiquidationsDownloadInfo();
+    await this.fileService.downloadLiquidationInfoExcel(data, res);
   }
 }

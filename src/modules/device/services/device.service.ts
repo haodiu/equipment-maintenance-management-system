@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, Res } from '@nestjs/common';
+import { Response } from 'express';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { UserNotFoundException } from '../../../exceptions';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
+import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.exception';
+import { FileService } from '../../file/services/file.service';
+import { LogbookService } from '../../logbook/services/logbook.service';
 import { UserService } from '../../user/services/user.service';
+import { DeviceLogbookDownloadDto } from '../domains/dtos/device-logbook-download.dto';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
@@ -20,6 +25,9 @@ export class DeviceService {
     private readonly deviceRepository: DeviceRepository,
     private readonly deviceTypeRepository: DeviceTypeRepository,
     private readonly userService: UserService,
+    @Inject(forwardRef(() => LogbookService))
+    private readonly logbookService: LogbookService,
+    private readonly fileService: FileService,
   ) {}
 
   findDeviceTypeById(typeId: number): Promise<DeviceTypeEntity | null> {
@@ -178,5 +186,24 @@ export class DeviceService {
     return numDeviceByType.map(
       (deviceType) => new NumDeviceByTypeDto(deviceType),
     );
+  }
+
+  async getLogbooksDownload(
+    deviceId: number,
+  ): Promise<DeviceLogbookDownloadDto[]> {
+    const logbooks = await this.logbookService.getAllEntityByDeviceId(deviceId);
+
+    if (!logbooks) {
+      throw new LogbookNotFoundException('Logbooks not found');
+    }
+
+    return logbooks.map((logbook) => new DeviceLogbookDownloadDto(logbook));
+  }
+
+  async downloadLogbooksInfo(liquidationId: number, @Res() res: Response) {
+    const data: DeviceLogbookDownloadDto[] = await this.getLogbooksDownload(
+      liquidationId,
+    );
+    await this.fileService.downloadDeviceLogbooksExcel(data, res);
   }
 }
