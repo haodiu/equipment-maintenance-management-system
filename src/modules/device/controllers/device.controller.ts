@@ -19,6 +19,7 @@ import { LogbookService } from '../../logbook/services/logbook.service';
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { DeviceTypeDto } from '../domains/dtos/device-type.dto';
 import { InputDeviceDto } from '../domains/dtos/input-device.dto';
+import { InputDeviceTypeDto } from '../domains/dtos/input-device-type.dto';
 import type { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
 import { DeviceService } from '../services/device.service';
 
@@ -37,6 +38,13 @@ export class DeviceController {
     @Body() inputDeviceDto: InputDeviceDto,
   ): Promise<DeviceResponseDto> {
     return this.deviceService.createDevice(inputDeviceDto);
+  }
+
+  @Post('device-type')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  createDeviceType(@Body() inputDeviceType: InputDeviceTypeDto) {
+    return this.deviceService.createDeviceType(inputDeviceType);
   }
 
   @Get()
@@ -58,6 +66,14 @@ export class DeviceController {
   @HttpCode(HttpStatus.OK)
   getDeviceTypeAmount(): Promise<NumDeviceByTypeDto[]> {
     return this.deviceService.getDeviceTypeCounts();
+  }
+
+  @Get('download-devices')
+  @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ description: 'Download device successfully' })
+  downloadDevicesInfo(@Res() res: Response) {
+    return this.deviceService.downloadDevicesInfo(res);
   }
 
   @Get(':id')

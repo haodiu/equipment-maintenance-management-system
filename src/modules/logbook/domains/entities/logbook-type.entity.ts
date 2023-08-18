@@ -7,7 +7,7 @@ export class LogbookTypeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   type: string;
 
   @OneToMany(() => LogbookEntity, (logbookEntity) => logbookEntity.type)

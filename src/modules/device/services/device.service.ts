@@ -9,9 +9,11 @@ import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.
 import { FileService } from '../../file/services/file.service';
 import { LogbookService } from '../../logbook/services/logbook.service';
 import { UserService } from '../../user/services/user.service';
+import { DeviceDownloadDto } from '../domains/dtos/device-download.dto';
 import { DeviceLogbookDownloadDto } from '../domains/dtos/device-logbook-download.dto';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
+import type { InputDeviceTypeDto } from '../domains/dtos/input-device-type.dto';
 import { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
 import type { DeviceEntity } from '../domains/entities/device.entity';
 import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
@@ -204,6 +206,30 @@ export class DeviceService {
     const data: DeviceLogbookDownloadDto[] = await this.getLogbooksDownload(
       liquidationId,
     );
+
     await this.fileService.downloadDeviceLogbooksExcel(data, res);
+  }
+
+  async getDevicesDownload(): Promise<DeviceDownloadDto[]> {
+    const devices = await this.deviceRepository.getAll();
+
+    if (!devices) {
+      throw new DeviceNotFoundException('Devices not found');
+    }
+
+    return devices.map((device) => new DeviceDownloadDto(device));
+  }
+
+  async downloadDevicesInfo(@Res() res: Response) {
+    const data: DeviceDownloadDto[] = await this.getDevicesDownload();
+    await this.fileService.downloadDevicesInfoExcel(data, res);
+  }
+
+  async createDeviceType(deviceTypeDto: InputDeviceTypeDto) {
+    const { type } = deviceTypeDto;
+
+    const deviceType = this.deviceTypeRepository.create({ type });
+
+    await this.deviceTypeRepository.save(deviceType);
   }
 }

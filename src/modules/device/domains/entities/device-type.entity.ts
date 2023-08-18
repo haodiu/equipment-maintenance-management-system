@@ -7,9 +7,9 @@ export class DeviceTypeEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   type: string;
 
   @OneToMany(() => DeviceEntity, (deviceEntity) => deviceEntity.type)
-  devices: DeviceEntity[];
+  devices?: DeviceEntity[];
 }

@@ -4,6 +4,8 @@ import { Response } from 'express';
 
 import { ImageService } from '../../../shared/services/image.service';
 import { ValidatorService } from '../../../shared/services/validator.service';
+import type { DeviceDownloadDto } from '../../device/domains/dtos/device-download.dto';
+import { DEVICES_DOWNLOAD_DTO } from '../../device/domains/dtos/device-download-row.dto';
 import { DEVICE_LOGBOOKS_DOWNLOAD_DTO } from '../../device/domains/dtos/device-logbook-dowload-row.dto';
 import type { DeviceLogbookDownloadDto } from '../../device/domains/dtos/device-logbook-download.dto';
 import type { LiquidationDownloadDto } from '../../liquidation/domains/dtos/liquidation-download.dto';
@@ -15,6 +17,10 @@ export class FileService {
     private validatorService: ValidatorService,
     private readonly imageService: ImageService,
   ) {}
+
+  removeDiacritics(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036F]/g, '');
+  }
 
   /**
    * Downloads user information as an Excel file.
@@ -54,7 +60,7 @@ export class FileService {
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Transfer-Encoding', 'binary');
 
     res.status(200);
@@ -95,12 +101,51 @@ export class FileService {
     }
 
     filename += `_LogbooksInfo.xlsx`;
+    const newFileName = this.removeDiacritics(filename);
+
     // Set response headers
     res.setHeader(
       'Content-Type',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     );
-    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+    res.setHeader('Content-Disposition', `attachment; filename=${newFileName}`);
+    res.setHeader('Content-Transfer-Encoding', 'binary');
+
+    res.status(200);
+    await book.xlsx.write(res);
+    res.end();
+  }
+
+  async downloadDevicesInfoExcel(
+    data: DeviceDownloadDto[],
+    @Res() res: Response,
+  ) {
+    const book = new Workbook();
+
+    const sheet = book.addWorksheet('sheet1');
+    const devicesColumnInfo = Object.values(DEVICES_DOWNLOAD_DTO);
+
+    for (const [i, element] of devicesColumnInfo.entries()) {
+      sheet.getCell(1, i + 1).value = element;
+    }
+
+    for (const [rowIndex, datum] of data.entries()) {
+      const rowData = Object.values(datum);
+
+      for (const [i, element] of rowData.entries()) {
+        sheet.getCell(rowIndex + 2, i + 1).value = element;
+      }
+    }
+
+    // Generate the filename
+    const filename = 'DevicesInfo.xlsx';
+
+    // Set response headers
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    );
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-Transfer-Encoding', 'binary');
 
     res.status(200);

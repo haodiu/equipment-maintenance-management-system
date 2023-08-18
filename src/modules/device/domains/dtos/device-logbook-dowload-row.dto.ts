@@ -1,5 +1,5 @@
 export const DEVICE_LOGBOOKS_DOWNLOAD_DTO = {
-  deviceId: 'ID thiết bị',
+  deviceId: 'ID yêu cầu',
 
   deviceName: 'Tên thiết bị',
 
