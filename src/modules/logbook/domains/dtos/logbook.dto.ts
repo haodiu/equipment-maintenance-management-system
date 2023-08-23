@@ -14,6 +14,9 @@ export class LogbookDto extends AbstractDto {
   status?: string;
 
   @ApiProperty()
+  timePlaned?: string;
+
+  @ApiProperty()
   type?: string;
 
   @ApiProperty()
@@ -45,6 +48,7 @@ export class LogbookDto extends AbstractDto {
     this.logbookId = logbookEntity.id;
     this.description = logbookEntity.description;
     this.status = logbookEntity.status;
+    this.timePlaned = logbookEntity.timePlaned;
     this.type = logbookEntity.type.type;
     this.confirmed = logbookEntity.confirmed;
     this.confirmedDescription = logbookEntity.confirmedDescription;

@@ -15,6 +15,8 @@ export interface ILogbookEntity extends IAbstractEntity<LogbookDto> {
 
   status: LogbookStatusType;
 
+  timePlaned: string;
+
   confirmed: boolean;
 
   isDeleted: boolean;
@@ -33,6 +35,9 @@ export class LogbookEntity
 
   @Column()
   status: LogbookStatusType;
+
+  @Column({ nullable: true })
+  timePlaned: string;
 
   @Column({ default: false })
   confirmed: boolean;

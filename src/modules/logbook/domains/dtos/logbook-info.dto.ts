@@ -10,6 +10,9 @@ export class LogbookInfoDto {
   status: string;
 
   @ApiProperty()
+  timePlaned: string;
+
+  @ApiProperty()
   description: string;
 
   @ApiProperty()
@@ -27,6 +30,7 @@ export class LogbookInfoDto {
   constructor(logbook: LogbookEntity) {
     this.id = logbook.id;
     this.status = logbook.status;
+    this.timePlaned = logbook.timePlaned;
     this.description = logbook.description;
     this.type = logbook.type.type;
     this.confirmed = logbook.confirmed;
