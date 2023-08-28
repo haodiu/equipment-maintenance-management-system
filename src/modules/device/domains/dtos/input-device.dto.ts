@@ -14,17 +14,17 @@ export class InputDeviceDto {
   @ApiPropertyOptional()
   @IsString()
   @Trim()
-  name: string;
+  readonly name: string;
 
   @ApiPropertyOptional()
   @IsNumber()
-  typeId: number;
+  readonly typeId: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNullable()
   @IsNumber()
-  userId?: number;
+  readonly userId?: number;
 
   @ApiPropertyOptional({
     type: 'string',
@@ -33,13 +33,13 @@ export class InputDeviceDto {
   @IsOptional()
   @IsString()
   @Trim()
-  deviceStatus?: DeviceStatusType;
+  readonly deviceStatus?: DeviceStatusType;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @Trim()
-  purchaseLocation?: string;
+  readonly purchaseLocation?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -51,15 +51,15 @@ export class InputDeviceDto {
     each: true,
     always: false,
   })
-  purchaseDate?: string;
+  readonly purchaseDate?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  price?: number;
+  readonly price?: number;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
   @Trim()
-  image?: string;
+  readonly image?: string;
 }

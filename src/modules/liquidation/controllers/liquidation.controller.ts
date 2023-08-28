@@ -74,6 +74,6 @@ export class LiquidationController {
   @Post(':id/soft-delete')
   @HttpCode(HttpStatus.OK)
   softDelete(@Param('id') id: number) {
-    return this.liquidationService.softDeleted(id);
+    return this.liquidationService.softDelete(id);
   }
 }

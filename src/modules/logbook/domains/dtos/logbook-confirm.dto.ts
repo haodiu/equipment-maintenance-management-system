@@ -8,5 +8,5 @@ export class LogbookConfirmDto {
   @IsString()
   @IsNotEmpty()
   @Trim()
-  confirmedDescription: string;
+  readonly confirmedDescription: string;
 }

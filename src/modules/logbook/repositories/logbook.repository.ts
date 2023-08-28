@@ -20,7 +20,7 @@ export class LogbookRepository extends Repository<LogbookEntity> {
       .getMany();
   }
 
-  async findOneById(id: number): Promise<LogbookEntity | null> {
+  async findById(id: number): Promise<LogbookEntity | null> {
     return this.createQueryBuilder('logbooks')
       .leftJoinAndSelect('logbooks.user', 'user')
       .leftJoinAndSelect('logbooks.device', 'device')

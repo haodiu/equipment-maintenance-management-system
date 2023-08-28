@@ -1,16 +1,16 @@
 import { Injectable, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { Transactional } from 'typeorm-transactional';
 
 import { DEVICE_STATUS } from '../../../constants/device-status';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { LiquidationNotFoundException } from '../../../exceptions/liquidation-not-found.exception';
-import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
 import { FileService } from '../../file/services/file.service';
-import type { UserEntity } from '../../user/domains/entities/user.entity';
+import { UserEntity } from '../../user/domains/entities/user.entity';
 import { LiquidationDto } from '../domains/dtos/liquidation.dto';
 import { LiquidationDownloadDto } from '../domains/dtos/liquidation-download.dto';
-import type { LiquidationInputDto } from '../domains/dtos/liquidation-input.dto';
+import { LiquidationInputDto } from '../domains/dtos/liquidation-input.dto';
 import type { LiquidationQueryDto } from '../domains/dtos/liquidation-query.dto';
 import type { LiquidationUpdateDto } from '../domains/dtos/liquidation-update.dto';
 import { LiquidationRepository } from '../repositories/liquidation.repository';
@@ -20,10 +20,17 @@ export class LiquidationService {
   constructor(
     private readonly liquidationRepository: LiquidationRepository,
     private readonly deviceService: DeviceService,
-    private readonly deviceRepository: DeviceRepository,
     private readonly fileService: FileService,
   ) {}
 
+  /**
+   * Get detailed information about a liquidation by its ID.
+   *
+   * @param {number} liquidationId - The ID of the liquidation to get details for.
+   * @returns {Promise<LiquidationDto | null>} A promise that resolves to detailed liquidation information,
+   *                                          or null if no liquidation is found.
+   * @throws {LiquidationNotFoundException} If the liquidation is not found.
+   */
   async getDetail(liquidationId: number): Promise<LiquidationDto | null> {
     const liquidation = await this.liquidationRepository.findById(
       liquidationId,
@@ -36,6 +43,14 @@ export class LiquidationService {
     return new LiquidationDto(liquidation);
   }
 
+  /**
+   * Get a list of all liquidations, optionally filtered by approval status.
+   *
+   * @param {LiquidationQueryDto} [option] - Query options for filtering liquidations.
+   * @returns {Promise<LiquidationDto[] | null>} A promise that resolves to an array of liquidation DTOs,
+   *                                             or null if no liquidations are found.
+   * @throws {LiquidationNotFoundException} If no liquidations are found.
+   */
   async getAll(option?: LiquidationQueryDto): Promise<LiquidationDto[] | null> {
     const isApproved = option?.isApproved;
 
@@ -48,13 +63,21 @@ export class LiquidationService {
     return liquidations.map((liquidation) => new LiquidationDto(liquidation));
   }
 
+  /**
+   * Create a new liquidation entry.
+   *
+   * @param {LiquidationInputDto} liquidationInputDto - Data for creating the new liquidation.
+   * @param {UserEntity} authUser - The authenticated user performing the action.
+   * @throws {Error} If there's an issue during the creation process or validation checks fail.
+   */
+  @Transactional()
   async createOne(
     liquidationInputDto: LiquidationInputDto,
     authUser: UserEntity,
   ) {
     const { reason, deviceId } = liquidationInputDto;
     const liquidationExistApproved =
-      await this.liquidationRepository.checkIsApprovedByDeviceId(deviceId);
+      await this.liquidationRepository.checkDeviceLiquidate(deviceId);
 
     if (liquidationExistApproved) {
       throw new Error('Device was liquidate');
@@ -79,9 +102,18 @@ export class LiquidationService {
     device.deviceStatus = DEVICE_STATUS.PENDING_DISPOSAL;
 
     await this.liquidationRepository.save(liquidation);
-    await this.deviceRepository.save(device);
+    await this.deviceService.saveDevice(device);
   }
 
+  /**
+   * Update an existing liquidation entry.
+   *
+   * @param {number} liquidationId - The ID of the liquidation to update.
+   * @param {LiquidationUpdateDto} liquidationUpdateDto - Data for updating the liquidation.
+   * @param {UserEntity} authUser - The authenticated user performing the action.
+   * @returns {Promise<LiquidationDto>} A promise that resolves to a DTO containing the updated liquidation information.
+   * @throws {LiquidationNotFoundException} If the liquidation is not found.
+   */
   async updateOne(
     liquidationId: number,
     liquidationUpdateDto: LiquidationUpdateDto,
@@ -104,6 +136,12 @@ export class LiquidationService {
     return new LiquidationDto(liquidation);
   }
 
+  /**
+   * Approve a liquidation entry.
+   *
+   * @param {number} liquidationId - The ID of the liquidation to approve.
+   * @throws {LiquidationNotFoundException} If the liquidation is not found.
+   */
   async approveLiquidation(liquidationId: number) {
     const liquidation = await this.liquidationRepository.findById(
       liquidationId,
@@ -118,7 +156,13 @@ export class LiquidationService {
     await this.liquidationRepository.save(liquidation);
   }
 
-  async softDeleted(liquidationId: number) {
+  /**
+   * Soft delete a liquidation entry.
+   *
+   * @param {number} liquidationId - The ID of the liquidation to soft delete.
+   * @throws {LiquidationNotFoundException} If the liquidation is not found.
+   */
+  async softDelete(liquidationId: number) {
     const liquidation = await this.liquidationRepository.findById(
       liquidationId,
     );
@@ -132,6 +176,12 @@ export class LiquidationService {
     await this.liquidationRepository.save(liquidation);
   }
 
+  /**
+   * Get liquidation entries download information.
+   *
+   * @returns {Promise<LiquidationDownloadDto[]>} A promise that resolves to an array of DTOs containing liquidation download information.
+   * @throws {LiquidationNotFoundException} If no liquidations are found.
+   */
   async getLiquidationsDownloadInfo(): Promise<LiquidationDownloadDto[]> {
     const liquidations = await this.liquidationRepository.findAll();
 
@@ -145,10 +195,9 @@ export class LiquidationService {
   }
 
   /**
-   * Downloads the user information as an Excel file.
-   * @param {number} userId - The ID of the user.
-   * @param {Response} res - The response object to send the file download.
-   * @returns {Promise<void>} - A promise that resolves when the file download is completed.
+   * Download liquidation entries information.
+   *
+   * @param {Response} res - Express Response object to send the download.
    */
   async downloadLiquidationInfo(@Res() res: Response) {
     const data: LiquidationDownloadDto[] =

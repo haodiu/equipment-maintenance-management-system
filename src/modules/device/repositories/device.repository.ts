@@ -27,7 +27,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
     });
   }
 
-  async getDetail(deviceId: number): Promise<DeviceEntity | null> {
+  async findDetail(deviceId: number): Promise<DeviceEntity | null> {
     return this.createQueryBuilder('devices')
       .select('devices')
       .leftJoinAndSelect('devices.type', 'deviceTypes')
@@ -37,7 +37,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .getOne();
   }
 
-  async getAll(): Promise<DeviceEntity[] | null> {
+  async findAll(): Promise<DeviceEntity[] | null> {
     return this.createQueryBuilder('devices')
       .select('devices')
       .leftJoinAndSelect('devices.type', 'deviceTypes')
@@ -47,7 +47,7 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .getMany();
   }
 
-  async getAllByUserId(userId: number): Promise<DeviceEntity[] | null> {
+  async findAllByUserId(userId: number): Promise<DeviceEntity[] | null> {
     return this.createQueryBuilder('devices')
       .leftJoinAndSelect('devices.type', 'device_types')
       .where('devices.user_id = :userId', { userId })

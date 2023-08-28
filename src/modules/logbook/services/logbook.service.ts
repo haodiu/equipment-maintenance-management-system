@@ -8,41 +8,35 @@ import { UserNotFoundException } from '../../../exceptions';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
 import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.exception';
-import { DeviceRepository } from '../../device/repositories/device.repository';
 import { DeviceService } from '../../device/services/device.service';
+import { LogbookTypeService } from '../../logbook_type/services/logbook-type.service';
 import { UserEntity } from '../../user/domains/entities/user.entity';
 import { UserService } from '../../user/services/user.service';
 import { LogbookDto } from '../domains/dtos/logbook.dto';
 import { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';
 import { LogbookCreateDto } from '../domains/dtos/logbook-create.dto';
 import type { LogbookQueryDto } from '../domains/dtos/logbook-query.dto';
-import { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
 import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dto';
-import { NumLogbookByTypeDto } from '../domains/dtos/num-logbook-type.dto';
 import { LogbookEntity } from '../domains/entities/logbook.entity';
 import { LogbookRepository } from '../repositories/logbook.repository';
-import { LogbookTypeRepository } from '../repositories/logbook-type.repository';
 
 @Injectable()
 export class LogbookService {
   constructor(
     private readonly logbookRepository: LogbookRepository,
     private readonly userService: UserService,
-    private readonly logbookTypeRepository: LogbookTypeRepository,
+    private readonly logbookTypeService: LogbookTypeService,
     @Inject(forwardRef(() => DeviceService))
     private readonly deviceService: DeviceService,
-    private readonly deviceRepository: DeviceRepository,
   ) {}
 
-  async findAllByDeviceId(deviceId: number): Promise<LogbookDto[] | null> {
+  async findAllByDeviceId(deviceId: number): Promise<LogbookDto[]> {
     const logbooks = await this.logbookRepository.findByDeviceId(deviceId);
 
     return logbooks.map((logbook) => new LogbookDto(logbook));
   }
 
-  async getAllEntityByDeviceId(
-    deviceId: number,
-  ): Promise<LogbookEntity[] | null> {
+  async getAllEntityByDeviceId(deviceId: number): Promise<LogbookEntity[]> {
     return this.logbookRepository.findByDeviceId(deviceId);
   }
 
@@ -61,13 +55,13 @@ export class LogbookService {
   @Transactional()
   async createLogbook(logbookCreateDto: LogbookCreateDto): Promise<LogbookDto> {
     const { userId, deviceId, typeId, description } = logbookCreateDto;
-    const user = await this.userService.findOneById(userId);
+    const user = await this.userService.findOneByFilterOptions({ id: userId });
 
     if (!user) {
       throw new UserNotFoundException('User not found');
     }
 
-    const logbookType = await this.logbookTypeRepository.findById(typeId);
+    const logbookType = await this.logbookTypeService.findOne(typeId);
 
     if (!logbookType) {
       throw new DeviceTypeNotFoundException('DeviceType not found');
@@ -107,7 +101,7 @@ export class LogbookService {
     logbook.type = logbookType;
     logbook.device = device;
 
-    await this.deviceRepository.save(device);
+    await this.deviceService.saveDevice(device);
 
     await this.logbookRepository.save(logbook);
 
@@ -121,8 +115,8 @@ export class LogbookService {
     return logbooks.map((logbook) => new LogbookDto(logbook));
   }
 
-  async getOne(logbookId: number): Promise<LogbookDto> {
-    const logbook = await this.logbookRepository.findOneById(logbookId);
+  async getOne(logbookId: number): Promise<LogbookDto | null> {
+    const logbook = await this.logbookRepository.findById(logbookId);
 
     if (!logbook) {
       throw new LogbookNotFoundException('Logbook not found');
@@ -137,7 +131,7 @@ export class LogbookService {
     logbookConfirmDto: LogbookConfirmDto,
     authUser: UserEntity,
   ) {
-    const logbook = await this.logbookRepository.findOneById(logbookId);
+    const logbook = await this.logbookRepository.findById(logbookId);
 
     if (!logbook) {
       throw new LogbookNotFoundException('Logbook not found');
@@ -156,7 +150,7 @@ export class LogbookService {
     ) {
       const device = logbook.device;
       device.deviceStatus = DEVICE_STATUS.IN_USE;
-      await this.deviceRepository.save(device);
+      await this.deviceService.saveDevice(device);
     }
 
     await this.logbookRepository.save(logbook);
@@ -167,7 +161,7 @@ export class LogbookService {
     logbookId: number,
     logbookUpdateStatus: LogbookUpdateStatusDto,
   ): Promise<LogbookDto> {
-    const logbook = await this.logbookRepository.findOneById(logbookId);
+    const logbook = await this.logbookRepository.findById(logbookId);
 
     if (!logbook) {
       throw new LogbookNotFoundException('Logbook not found');
@@ -191,7 +185,7 @@ export class LogbookService {
     }
 
     await this.logbookRepository.save(logbook);
-    await this.deviceRepository.save(device);
+    await this.deviceService.saveDevice(device);
 
     return new LogbookDto(logbook);
   }
@@ -222,25 +216,5 @@ export class LogbookService {
     }
 
     return new LogbookDto(logbook);
-  }
-
-  async getLogbookTypes(): Promise<LogbookTypeDto[]> {
-    const types = await this.logbookTypeRepository.find();
-
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!types) {
-      throw new Error('LogbookType not found');
-    }
-
-    return types.map((logbookType) => new LogbookTypeDto(logbookType));
-  }
-
-  async getLogbookTypeCounts(): Promise<NumLogbookByTypeDto[]> {
-    const numLogbookByType =
-      await this.logbookTypeRepository.getLogbookTypeCounts();
-
-    return numLogbookByType.map(
-      (logbookType) => new NumLogbookByTypeDto(logbookType),
-    );
   }
 }

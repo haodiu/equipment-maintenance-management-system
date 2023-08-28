@@ -6,19 +6,19 @@ import { Trim } from '../../../../decorators';
 export class LogbookCreateDto {
   @ApiProperty()
   @IsNumber()
-  userId: number;
+  readonly userId: number;
 
   @ApiProperty()
   @IsNumber()
-  deviceId: number;
+  readonly deviceId: number;
 
   @ApiProperty()
   @IsNumber()
-  typeId: number;
+  readonly typeId: number;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Trim()
-  description: string;
+  readonly description: string;
 }

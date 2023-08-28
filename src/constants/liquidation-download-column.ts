@@ -1,4 +1,4 @@
-export const LIQUIDATION_DOWNLOAD_DTO = {
+export const LIQUIDATION_DOWNLOAD_COLUMN = {
   id: 'ID',
 
   reason: 'Lý do',

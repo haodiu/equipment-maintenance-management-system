@@ -2,14 +2,14 @@ import { Injectable, Res } from '@nestjs/common';
 import { Workbook } from 'exceljs';
 import { Response } from 'express';
 
+import { DEVICES_DOWNLOAD_COLUMN } from '../../../constants/device-download-column';
+import { DEVICE_LOGBOOKS_DOWNLOAD_COLUMN } from '../../../constants/device-logbook-download-column';
+import { LIQUIDATION_DOWNLOAD_COLUMN } from '../../../constants/liquidation-download-column';
 import { ImageService } from '../../../shared/services/image.service';
 import { ValidatorService } from '../../../shared/services/validator.service';
 import type { DeviceDownloadDto } from '../../device/domains/dtos/device-download.dto';
-import { DEVICES_DOWNLOAD_DTO } from '../../device/domains/dtos/device-download-row.dto';
-import { DEVICE_LOGBOOKS_DOWNLOAD_DTO } from '../../device/domains/dtos/device-logbook-dowload-row.dto';
 import type { DeviceLogbookDownloadDto } from '../../device/domains/dtos/device-logbook-download.dto';
 import type { LiquidationDownloadDto } from '../../liquidation/domains/dtos/liquidation-download.dto';
-import { LIQUIDATION_DOWNLOAD_DTO } from '../../liquidation/domains/dtos/liquidation-download-column.dto';
 
 @Injectable()
 export class FileService {
@@ -36,7 +36,7 @@ export class FileService {
     const book = new Workbook();
 
     const sheet = book.addWorksheet('sheet1');
-    const liquidationColumnInfo = Object.values(LIQUIDATION_DOWNLOAD_DTO);
+    const liquidationColumnInfo = Object.values(LIQUIDATION_DOWNLOAD_COLUMN);
 
     // Writing headers from liquidationColumnInfo
     for (const [i, element] of liquidationColumnInfo.entries()) {
@@ -75,7 +75,7 @@ export class FileService {
     const book = new Workbook();
 
     const sheet = book.addWorksheet('sheet1');
-    const logbookColumnInfo = Object.values(DEVICE_LOGBOOKS_DOWNLOAD_DTO);
+    const logbookColumnInfo = Object.values(DEVICE_LOGBOOKS_DOWNLOAD_COLUMN);
 
     // Writing headers from logbookColumnInfo
     for (const [i, element] of logbookColumnInfo.entries()) {
@@ -123,7 +123,7 @@ export class FileService {
     const book = new Workbook();
 
     const sheet = book.addWorksheet('sheet1');
-    const devicesColumnInfo = Object.values(DEVICES_DOWNLOAD_DTO);
+    const devicesColumnInfo = Object.values(DEVICES_DOWNLOAD_COLUMN);
 
     for (const [i, element] of devicesColumnInfo.entries()) {
       sheet.getCell(1, i + 1).value = element;

@@ -24,8 +24,8 @@ export class UserService {
     private readonly deviceService: DeviceService,
   ) {}
 
-  async getDeviceUser(): Promise<UserDto[] | null> {
-    const users = await this.userRepository.findByRole(ROLE_TYPE.USER);
+  async getDeviceUsers(): Promise<UserDto[] | null> {
+    const users = await this.userRepository.findManyByRole(ROLE_TYPE.USER);
 
     if (!users) {
       throw new UserNotFoundException('User not found');
@@ -44,18 +44,18 @@ export class UserService {
     return new UserDto(user);
   }
 
-  async findOneByEmail(email: string): Promise<UserEntity | null> {
-    const user = await this.userRepository.findOneByFilter({ email });
-
-    if (!user) {
-      throw new UserNotFoundException('User not found');
-    }
-
-    return user;
-  }
-
-  async findOneById(id: number): Promise<UserEntity | null> {
-    const user = await this.userRepository.findOneByFilter({ id });
+  /**
+   * Find a user entity by either email or ID.
+   *
+   * @param {Partial<{ id: number; email: string }>} filterOptions - Filter options to narrow down the search.
+   * @returns {Promise<UserEntity | null>} A promise that resolves to the found user entity,
+   *                                      or null if no user is found.
+   * @throws {UserNotFoundException} If the user is not found.
+   */
+  async findOneByFilterOptions(
+    filterOptions: Partial<{ id: number; email: string }>,
+  ): Promise<UserEntity | null> {
+    const user = await this.userRepository.findOneByFilter(filterOptions);
 
     if (!user) {
       throw new UserNotFoundException('User not found');
@@ -125,6 +125,6 @@ export class UserService {
   }
 
   getDeviceByUserId(userId: number) {
-    return this.deviceService.getDeviceByUserId(userId);
+    return this.deviceService.getDevicesByUserId(userId);
   }
 }

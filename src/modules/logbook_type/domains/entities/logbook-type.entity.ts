@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { LogbookEntity } from '../entities/logbook.entity';
-
+import { LogbookEntity } from '../../../logbook/domains/entities/logbook.entity';
 @Entity({ name: 'logbook_types' })
 export class LogbookTypeEntity {
   @PrimaryGeneratedColumn()

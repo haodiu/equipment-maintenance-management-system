@@ -1,7 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
-import { DeviceEntity } from './device.entity';
-
+import { DeviceEntity } from '../../../device/domains/entities/device.entity';
 @Entity({ name: 'device_types' })
 export class DeviceTypeEntity {
   @PrimaryGeneratedColumn()

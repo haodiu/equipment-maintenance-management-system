@@ -1,4 +1,4 @@
-export const DEVICE_LOGBOOKS_DOWNLOAD_DTO = {
+export const DEVICE_LOGBOOKS_DOWNLOAD_COLUMN = {
   deviceId: 'ID yêu cầu',
 
   deviceName: 'Tên thiết bị',

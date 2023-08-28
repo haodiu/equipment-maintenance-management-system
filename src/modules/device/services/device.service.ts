@@ -5,7 +5,7 @@ import { DEVICE_STATUS } from '../../../constants/device-status';
 import { UserNotFoundException } from '../../../exceptions';
 import { DeviceNotFoundException } from '../../../exceptions/device-not-found.exception';
 import { DeviceTypeNotFoundException } from '../../../exceptions/device-type-not-found.exception';
-import { LogbookNotFoundException } from '../../../exceptions/logbook-not-found.exception';
+import { DeviceTypeService } from '../../device_type/services/device-type.service';
 import { FileService } from '../../file/services/file.service';
 import { LogbookService } from '../../logbook/services/logbook.service';
 import { UserService } from '../../user/services/user.service';
@@ -13,35 +13,40 @@ import { DeviceDownloadDto } from '../domains/dtos/device-download.dto';
 import { DeviceLogbookDownloadDto } from '../domains/dtos/device-logbook-download.dto';
 import { DeviceResponseDto } from '../domains/dtos/device-response.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
-import type { InputDeviceTypeDto } from '../domains/dtos/input-device-type.dto';
-import { NumDeviceByTypeDto } from '../domains/dtos/num-device-by-type.dto';
 import type { DeviceEntity } from '../domains/entities/device.entity';
-import type { DeviceTypeEntity } from '../domains/entities/device-type.entity';
 import { DeviceRepository } from '../repositories/device.repository';
-import { DeviceTypeRepository } from '../repositories/device-type.repisitory';
-import { DeviceTypeDto } from './../domains/dtos/device-type.dto';
 
 @Injectable()
 export class DeviceService {
   constructor(
     private readonly deviceRepository: DeviceRepository,
-    private readonly deviceTypeRepository: DeviceTypeRepository,
     private readonly userService: UserService,
+    private readonly deviceTypeService: DeviceTypeService,
     @Inject(forwardRef(() => LogbookService))
     private readonly logbookService: LogbookService,
     private readonly fileService: FileService,
   ) {}
 
-  findDeviceTypeById(typeId: number): Promise<DeviceTypeEntity | null> {
-    return this.deviceTypeRepository.findById(typeId);
-  }
-
+  /**
+   * Find a device entity by its ID.
+   *
+   * @param {number} deviceId - The ID of the device to find.
+   * @returns {Promise<DeviceEntity | null>} A promise that resolves to the found device entity,
+   *                                          or null if no device is found.
+   */
   findById(deviceId: number): Promise<DeviceEntity | null> {
     return this.deviceRepository.findById(deviceId);
   }
 
+  /**
+   * Get detailed information about a device.
+   *
+   * @param {number} deviceId - The ID of the device to get details for.
+   * @returns {Promise<DeviceResponseDto>} A promise that resolves to a DTO containing detailed device information.
+   * @throws {DeviceNotFoundException} If the device is not found.
+   */
   async getDetail(deviceId: number): Promise<DeviceResponseDto> {
-    const device = await this.deviceRepository.getDetail(deviceId);
+    const device = await this.deviceRepository.findDetail(deviceId);
 
     if (!device) {
       throw new DeviceNotFoundException('Device not found');
@@ -50,22 +55,37 @@ export class DeviceService {
     return new DeviceResponseDto(device);
   }
 
-  async getAll(): Promise<DeviceResponseDto[]> {
-    const devices = await this.deviceRepository.getAll();
+  /**
+   * Get all devices.
+   *
+   * @returns {Promise<DeviceResponseDto[]>} A promise that resolves to an array of DTOs containing device information.
+   * @throws {DeviceNotFoundException} If no devices are found.
+   */
 
-    if (!devices || devices.length === 0) {
+  async getAll(): Promise<DeviceResponseDto[]> {
+    const devices = await this.deviceRepository.findAll();
+
+    if (!devices) {
       throw new DeviceNotFoundException('Devices not found');
     }
 
     return devices.map((device) => new DeviceResponseDto(device));
   }
 
+  /**
+   * Create a new device entity.
+   *
+   * @param {InputDeviceDto} inputDeviceDto - Data for creating the new device.
+   * @returns {Promise<DeviceResponseDto>} A promise that resolves to a DTO containing the created device information.
+   * @throws {DeviceTypeNotFoundException} If the specified device type is not found.
+   * @throws {UserNotFoundException} If the specified user is not found.
+   */
   async createDevice(
     inputDeviceDto: InputDeviceDto,
   ): Promise<DeviceResponseDto> {
     const { typeId, userId } = inputDeviceDto;
 
-    const deviceType = await this.deviceTypeRepository.findById(typeId);
+    const deviceType = await this.deviceTypeService.findById(typeId);
 
     if (!deviceType) {
       throw new DeviceTypeNotFoundException('DeviceType not found');
@@ -78,7 +98,9 @@ export class DeviceService {
     });
 
     if (userId) {
-      const user = await this.userService.findOneById(userId);
+      const user = await this.userService.findOneByFilterOptions({
+        id: userId,
+      });
 
       if (user) {
         device.user = user;
@@ -90,6 +112,16 @@ export class DeviceService {
     return new DeviceResponseDto(device);
   }
 
+  /**
+   * Update a device entity.
+   *
+   * @param {number} deviceId - The ID of the device to update.
+   * @param {Partial<InputDeviceDto>} inputDeviceDto - Data for updating the device.
+   * @returns {Promise<DeviceResponseDto>} A promise that resolves to a DTO containing the updated device information.
+   * @throws {DeviceNotFoundException} If the device is not found.
+   * @throws {DeviceTypeNotFoundException} If the specified device type is not found.
+   * @throws {UserNotFoundException} If the specified user is not found.
+   */
   async updateDevice(
     deviceId: number,
     inputDeviceDto: Partial<InputDeviceDto>,
@@ -111,7 +143,7 @@ export class DeviceService {
     }
 
     if (typeId) {
-      const type = await this.deviceTypeRepository.findById(typeId);
+      const type = await this.deviceTypeService.findById(typeId);
 
       if (!type) {
         throw new DeviceTypeNotFoundException('DeviceType not found');
@@ -124,7 +156,9 @@ export class DeviceService {
       device.user = null;
       device.deviceStatus = DEVICE_STATUS.NOT_USED;
     } else if (userId !== undefined) {
-      const user = await this.userService.findOneById(userId);
+      const user = await this.userService.findOneByFilterOptions({
+        id: userId,
+      });
 
       if (!user) {
         throw new UserNotFoundException('User not found');
@@ -146,8 +180,25 @@ export class DeviceService {
     return new DeviceResponseDto(device);
   }
 
+  /**
+   * Save a device entity.
+   *
+   * @param {DeviceEntity} device - The device entity to save.
+   * @returns {Promise<DeviceEntity>} A promise that resolves to the saved device entity.
+   */
+  saveDevice(device: DeviceEntity) {
+    return this.deviceRepository.save(device);
+  }
+
+  /**
+   * Soft delete a device entity.
+   *
+   * @param {number} deviceId - The ID of the device to soft delete.
+   * @throws {DeviceNotFoundException} If the device is not found.
+   * @throws {Error} If the device is in use by a user.
+   */
   async softDelete(deviceId: number) {
-    const device = await this.deviceRepository.getDetail(deviceId);
+    const device = await this.deviceRepository.findDetail(deviceId);
 
     if (!device) {
       throw new DeviceNotFoundException('Device not found');
@@ -165,14 +216,15 @@ export class DeviceService {
     await this.deviceRepository.save(device);
   }
 
-  async getAllDeviceType(): Promise<DeviceTypeDto[]> {
-    const deviceTypes = await this.deviceTypeRepository.find();
-
-    return deviceTypes.map((deviceType) => new DeviceTypeDto(deviceType));
-  }
-
-  async getDeviceByUserId(userId: number): Promise<DeviceResponseDto[]> {
-    const devices = await this.deviceRepository.getAllByUserId(userId);
+  /**
+   * Get devices associated with a user.
+   *
+   * @param {number} userId - The ID of the user.
+   * @returns {Promise<DeviceResponseDto[]>} A promise that resolves to an array of DTOs containing device information.
+   * @throws {DeviceNotFoundException} If no devices are found.
+   */
+  async getDevicesByUserId(userId: number): Promise<DeviceResponseDto[]> {
+    const devices = await this.deviceRepository.findAllByUserId(userId);
 
     if (!devices) {
       throw new DeviceNotFoundException('Device not found');
@@ -181,27 +233,27 @@ export class DeviceService {
     return devices.map((device) => new DeviceResponseDto(device));
   }
 
-  async getDeviceTypeCounts(): Promise<NumDeviceByTypeDto[]> {
-    const numDeviceByType =
-      await this.deviceTypeRepository.getDeviceTypeCounts();
-
-    return numDeviceByType.map(
-      (deviceType) => new NumDeviceByTypeDto(deviceType),
-    );
-  }
-
+  /**
+   * Get logbook download information for a device.
+   *
+   * @param {number} deviceId - The ID of the device.
+   * @returns {Promise<DeviceLogbookDownloadDto[]>} A promise that resolves to an array of DTOs containing logbook download information.
+   * @throws {LogbookNotFoundException} If no logbooks are found.
+   */
   async getLogbooksDownload(
     deviceId: number,
   ): Promise<DeviceLogbookDownloadDto[]> {
     const logbooks = await this.logbookService.getAllEntityByDeviceId(deviceId);
 
-    if (!logbooks) {
-      throw new LogbookNotFoundException('Logbooks not found');
-    }
-
     return logbooks.map((logbook) => new DeviceLogbookDownloadDto(logbook));
   }
 
+  /**
+   * Download logbook information for a device.
+   *
+   * @param {number} liquidationId - The ID of the device.
+   * @param {Response} res - Express Response object to send the download.
+   */
   async downloadLogbooksInfo(liquidationId: number, @Res() res: Response) {
     const data: DeviceLogbookDownloadDto[] = await this.getLogbooksDownload(
       liquidationId,
@@ -210,8 +262,14 @@ export class DeviceService {
     await this.fileService.downloadDeviceLogbooksExcel(data, res);
   }
 
+  /**
+   * Get devices download information.
+   *
+   * @returns {Promise<DeviceDownloadDto[]>} A promise that resolves to an array of DTOs containing device download information.
+   * @throws {DeviceNotFoundException} If no devices are found.
+   */
   async getDevicesDownload(): Promise<DeviceDownloadDto[]> {
-    const devices = await this.deviceRepository.getAll();
+    const devices = await this.deviceRepository.findAll();
 
     if (!devices) {
       throw new DeviceNotFoundException('Devices not found');
@@ -220,16 +278,13 @@ export class DeviceService {
     return devices.map((device) => new DeviceDownloadDto(device));
   }
 
+  /**
+   * Download device information.
+   *
+   * @param {Response} res - Express Response object to send the download.
+   */
   async downloadDevicesInfo(@Res() res: Response) {
     const data: DeviceDownloadDto[] = await this.getDevicesDownload();
     await this.fileService.downloadDevicesInfoExcel(data, res);
-  }
-
-  async createDeviceType(deviceTypeDto: InputDeviceTypeDto) {
-    const { type } = deviceTypeDto;
-
-    const deviceType = this.deviceTypeRepository.create({ type });
-
-    await this.deviceTypeRepository.save(deviceType);
   }
 }

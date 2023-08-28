@@ -4,9 +4,9 @@ import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
 import { LogbookStatusType } from '../../../../constants/logbook-status';
 import { DeviceEntity } from '../../../device/domains/entities/device.entity';
+import { LogbookTypeEntity } from '../../../logbook_type/domains/entities/logbook-type.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
 import type { LogbookDto } from '../dtos/logbook.dto';
-import { LogbookTypeEntity } from './logbook-type.entity';
 
 export interface ILogbookEntity extends IAbstractEntity<LogbookDto> {
   id: number;

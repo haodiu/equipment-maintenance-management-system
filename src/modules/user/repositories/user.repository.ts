@@ -10,16 +10,14 @@ export class UserRepository extends Repository<UserEntity> {
     super(UserEntity, dataSource.createEntityManager());
   }
 
-  async findById(id: number): Promise<UserEntity | null> {
-    return this.findOne({
-      where: {
-        id,
-        isDeleted: false,
-      },
-    });
-  }
-
-  async findByRole(role: RoleType): Promise<UserEntity[] | null> {
+  /**
+   * Find multiple user entities by their role.
+   *
+   * @param {RoleType} role - The role type to filter users by.
+   * @returns {Promise<UserEntity[] | null>} A promise that resolves to an array of user entities matching the role,
+   *                                          or null if no users are found.
+   */
+  async findManyByRole(role: RoleType): Promise<UserEntity[] | null> {
     return this.find({
       where: {
         role,
@@ -28,15 +26,13 @@ export class UserRepository extends Repository<UserEntity> {
     });
   }
 
-  async findByEmail(email: string): Promise<UserEntity | null> {
-    return this.findOne({
-      where: {
-        email,
-        isDeleted: false,
-      },
-    });
-  }
-
+  /**
+   * Find a single user entity using filter options.
+   *
+   * @param {Partial<{ id: number; email: string }>} options - Filter options to narrow down the search.
+   * @returns {Promise<UserEntity | null>} A promise that resolves to the found user entity,
+   *                                      or null if no user is found.
+   */
   async findOneByFilter(
     options: Partial<{
       id: number;

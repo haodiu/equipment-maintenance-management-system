@@ -9,11 +9,11 @@ import {
 import type { IAbstractEntity } from '../../../../common/abstract.entity';
 import { AbstractEntity } from '../../../../common/abstract.entity';
 import { DeviceStatusType } from '../../../../constants/device-status';
+import { DeviceTypeEntity } from '../../../device_type/domains/entities/device-type.entity';
 import { LiquidationEntity } from '../../../liquidation/domains/entities/liquidation.entity';
 import { LogbookEntity } from '../../../logbook/domains/entities/logbook.entity';
 import { UserEntity } from '../../../user/domains/entities/user.entity';
 import type { DeviceDto } from '../dtos/device.dto';
-import { DeviceTypeEntity } from './device-type.entity';
 
 export interface IDeviceEntity extends IAbstractEntity<DeviceDto> {
   id: number;

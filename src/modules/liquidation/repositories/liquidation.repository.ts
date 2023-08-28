@@ -34,9 +34,7 @@ export class LiquidationRepository extends Repository<LiquidationEntity> {
     return query.getMany();
   }
 
-  checkIsApprovedByDeviceId(
-    deviceId: number,
-  ): Promise<LiquidationEntity | null> {
+  checkDeviceLiquidate(deviceId: number): Promise<LiquidationEntity | null> {
     return this.createQueryBuilder('liquidations')
       .select('liquidations')
       .leftJoinAndSelect('liquidations.device', 'device')

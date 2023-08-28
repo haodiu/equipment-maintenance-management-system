@@ -1,4 +1,4 @@
-export const DEVICES_DOWNLOAD_DTO = {
+export const DEVICES_DOWNLOAD_COLUMN = {
   image: 'Hình',
 
   name: 'Tên',

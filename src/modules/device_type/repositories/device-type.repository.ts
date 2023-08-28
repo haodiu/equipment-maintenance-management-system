@@ -17,6 +17,14 @@ export class DeviceTypeRepository extends Repository<DeviceTypeEntity> {
     });
   }
 
+  /**
+   * Get an array of device type counts.
+   *
+   * Retrieves the count of devices for each device type.
+   *
+   * @returns {Promise<Array<{ typeName: string; count: number }>>} A promise that resolves to an array of objects
+   *                                                               containing the device type name and its corresponding count.
+   */
   async getDeviceTypeCounts(): Promise<
     Array<{ typeName: string; count: number }>
   > {

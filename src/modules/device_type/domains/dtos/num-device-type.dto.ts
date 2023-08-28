@@ -5,7 +5,7 @@ interface IDeviceTypeCount {
   count: number;
 }
 
-export class NumDeviceByTypeDto {
+export class NumDeviceTypeDto {
   @ApiProperty()
   typeName: string;
 

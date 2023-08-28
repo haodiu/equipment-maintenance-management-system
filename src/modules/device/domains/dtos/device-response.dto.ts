@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { DeviceTypeDto } from '../../../device_type/domains/dtos/device-type.dto';
 import type { DeviceEntity } from '../entities/device.entity';
-import { DeviceTypeDto } from './device-type.dto';
 import { DeviceUserDto } from './device-user.dto';
 
 export class DeviceResponseDto {

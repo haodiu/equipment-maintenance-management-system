@@ -8,12 +8,12 @@ export class LoginDto {
   @IsEmail()
   @IsNotEmpty()
   @Trim()
-  email: string;
+  readonly email: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @Trim()
   @Length(6, 40)
-  password: string;
+  readonly password: string;
 }

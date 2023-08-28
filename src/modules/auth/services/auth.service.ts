@@ -17,6 +17,11 @@ export class AuthService {
     private readonly apiConfigService: ApiConfigService,
   ) {}
 
+  /**
+   * Generate accessToken from payload, it include id & role of the user
+   * @param payload
+   * @returns accessToken with type is string
+   */
   generateAccessToken(payload: IJwtClaims): string {
     return this.jwtService.sign(payload, {
       secret: this.apiConfigService.authConfig.accessTokenPrivateKey,
@@ -24,9 +29,14 @@ export class AuthService {
     });
   }
 
+  /**
+   * Validate Admin by email and password
+   * @param credential
+   * @returns LoginResponseDto
+   */
   async validateAdminSignIn(credential: LoginDto): Promise<LoginResponseDto> {
     const { email, password } = credential;
-    const user = await this.userService.findOneByEmail(email);
+    const user = await this.userService.findOneByFilterOptions({ email });
 
     if (!user) {
       throw new UserNotFoundException('Admin not found');
