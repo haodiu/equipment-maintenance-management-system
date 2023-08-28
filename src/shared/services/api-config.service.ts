@@ -106,30 +106,8 @@ export class ApiConfigService {
     };
   }
 
-  get awsS3Config() {
-    return {
-      bucketRegion: this.getString('AWS_S3_BUCKET_REGION'),
-      bucketApiVersion: this.getString('AWS_S3_API_VERSION'),
-      bucketName: this.getString('AWS_S3_BUCKET_NAME'),
-    };
-  }
-
   get documentationEnabled(): boolean {
     return this.getBoolean('ENABLE_DOCUMENTATION');
-  }
-
-  get natsEnabled(): boolean {
-    return this.getBoolean('NATS_ENABLED');
-  }
-
-  get natsConfig() {
-    return {
-      host: this.getString('NATS_HOST'),
-      port: this.getNumber('NATS_PORT'),
-      url: this.getString('NATS_URL'),
-      user: this.getString('NATS_USER'),
-      pass: this.getString('NATS_PASS'),
-    };
   }
 
   get mailConfig() {
@@ -161,17 +139,6 @@ export class ApiConfigService {
     }
 
     return value;
-  }
-
-  get senteConfig() {
-    return {
-      senteBaseUrl: this.getString('SENTE_BASE_URL'),
-      senteMockHost: this.getString('SENTE_MOCK_HOST'),
-      username: this.getString('SENTE_USERNAME'),
-      password: this.getString('SENTE_PASSWORD'),
-
-      senteRegisterBaseUrl: this.getString('SENTE_USER_REGISTER_BASE_URL'),
-    };
   }
 
   get imageKitConfig() {

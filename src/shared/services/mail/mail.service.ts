@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import type { Msg } from 'nats';
 
 import { EMAIL_ACTIVATION } from '../../../constants';
 
@@ -8,22 +7,14 @@ import { EMAIL_ACTIVATION } from '../../../constants';
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendUserAccount(msg: Msg) {
-    const information = JSON.parse(msg.data.toString());
-    const { name, email, username, password } = information;
-
+  async sendUserToken(email: string, token: string) {
     const emailOptions = {
       from: EMAIL_ACTIVATION.FROM,
       subject: EMAIL_ACTIVATION.SUBJECT,
       to: email,
-      context: {
-        name,
-        username,
-        password,
-      },
-      template: './email-account',
+      context: { token },
+      template: './email-token',
     };
-
     await this.mailerService.sendMail(emailOptions);
   }
 }

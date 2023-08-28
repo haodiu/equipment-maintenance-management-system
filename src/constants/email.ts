@@ -1,6 +1,6 @@
 export const EMAIL_ACTIVATION = {
-  FROM: '"Support Team" <geekup@mailhog.local>',
-  SUBJECT: '(GEEK Up) Your account information',
+  FROM: '"Support Team" <nacorp@mailhog.local>',
+  SUBJECT: '(NA Corp) Your token for change password',
 };
 
 export const DEFAULT_EMAIL_CONFIG = {

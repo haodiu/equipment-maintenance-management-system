@@ -12,7 +12,7 @@
         "watchAssets": true
       },
       {
-        "include": "mail/templates/**/*",
+        "include": "shared/services/mail/templates/**/*",
         "watchAssets": true
       }
     ]

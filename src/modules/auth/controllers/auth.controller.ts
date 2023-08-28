@@ -10,9 +10,11 @@ import {
 import { SuccessMetaResponseDto } from '../../../common/dto/success-response.dto';
 import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
 import { UserNotFoundResponseDto } from '../../user/domains/dtos/user-not-found-response.dto';
+import { EmailDto } from '../dtos/email.dto';
 import { LoginDto } from '../dtos/login.dto';
 import { LoginMetaResponseDto } from '../dtos/login-meta-response.dto';
 import type { LoginResponseDto } from '../dtos/login-response.dto';
+import { ResetPasswordDto } from '../dtos/reset-password.dto';
 import { UserRegisterDto } from '../dtos/user-register.dto';
 import { AuthService } from '../services/auth.service';
 import { UnprocessableEntityResponseDto } from './../../../common/dto/unprocessable-entity.dto';
@@ -60,5 +62,17 @@ export class AuthController {
   })
   login(@Body() credential: LoginDto): Promise<LoginResponseDto> {
     return this.authService.validateAdminSignIn(credential);
+  }
+
+  @Post('/forgot-password')
+  @HttpCode(HttpStatus.OK)
+  sendTokenToEmail(@Body() emailDto: EmailDto): Promise<void> {
+    return this.authService.createForgotPasswordToken(emailDto);
+  }
+
+  @Post('/reset-password')
+  @HttpCode(HttpStatus.OK)
+  resetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<void> {
+    return this.authService.resetPasswordWithToken(resetPasswordDto);
   }
 }

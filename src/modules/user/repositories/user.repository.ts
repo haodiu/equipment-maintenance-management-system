@@ -37,6 +37,7 @@ export class UserRepository extends Repository<UserEntity> {
     options: Partial<{
       id: number;
       email: string;
+      resetPasswordToken: string;
     }>,
   ): Promise<UserEntity | null> {
     const queryBuilder = this.createQueryBuilder('user');
@@ -51,6 +52,12 @@ export class UserRepository extends Repository<UserEntity> {
           );
         }),
       );
+
+    if (options.resetPasswordToken) {
+      queryBuilder.andWhere('user.reset_password_token = :resetPasswordToken', {
+        resetPasswordToken: options.resetPasswordToken,
+      });
+    }
 
     return queryBuilder.getOne();
   }

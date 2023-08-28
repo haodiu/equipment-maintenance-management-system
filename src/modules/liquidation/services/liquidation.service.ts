@@ -102,7 +102,7 @@ export class LiquidationService {
     device.deviceStatus = DEVICE_STATUS.PENDING_DISPOSAL;
 
     await this.liquidationRepository.save(liquidation);
-    await this.deviceService.saveDevice(device);
+    await this.deviceService.setDevice(device);
   }
 
   /**

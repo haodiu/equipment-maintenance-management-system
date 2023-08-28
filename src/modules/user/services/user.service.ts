@@ -53,7 +53,11 @@ export class UserService {
    * @throws {UserNotFoundException} If the user is not found.
    */
   async findOneByFilterOptions(
-    filterOptions: Partial<{ id: number; email: string }>,
+    filterOptions: Partial<{
+      id: number;
+      email: string;
+      resetPasswordToken: string;
+    }>,
   ): Promise<UserEntity | null> {
     const user = await this.userRepository.findOneByFilter(filterOptions);
 
@@ -90,6 +94,10 @@ export class UserService {
     await this.userRepository.save(updateUser);
 
     return new UserDto(updateUser);
+  }
+
+  setUser(userEntity: UserEntity) {
+    return this.userRepository.save(userEntity);
   }
 
   async changePassword(

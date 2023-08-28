@@ -101,7 +101,7 @@ export class LogbookService {
     logbook.type = logbookType;
     logbook.device = device;
 
-    await this.deviceService.saveDevice(device);
+    await this.deviceService.setDevice(device);
 
     await this.logbookRepository.save(logbook);
 
@@ -150,7 +150,7 @@ export class LogbookService {
     ) {
       const device = logbook.device;
       device.deviceStatus = DEVICE_STATUS.IN_USE;
-      await this.deviceService.saveDevice(device);
+      await this.deviceService.setDevice(device);
     }
 
     await this.logbookRepository.save(logbook);
@@ -185,7 +185,7 @@ export class LogbookService {
     }
 
     await this.logbookRepository.save(logbook);
-    await this.deviceService.saveDevice(device);
+    await this.deviceService.setDevice(device);
 
     return new LogbookDto(logbook);
   }

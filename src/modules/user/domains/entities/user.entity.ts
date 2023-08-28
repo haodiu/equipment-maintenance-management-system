@@ -30,6 +30,10 @@ export interface IUserEntity extends IAbstractEntity<UserDto> {
 
   role: RoleType;
 
+  resetPasswordToken: string;
+
+  resetPasswordTokenExpiration: Date;
+
   isDeleted: boolean;
 }
 
@@ -67,6 +71,12 @@ export class UserEntity extends AbstractEntity<UserDto> implements IUserEntity {
 
   @Column()
   role: RoleType;
+
+  @Column({ nullable: true })
+  resetPasswordToken: string;
+
+  @Column({ nullable: true })
+  resetPasswordTokenExpiration: Date;
 
   @Column({ default: false })
   isDeleted: boolean;

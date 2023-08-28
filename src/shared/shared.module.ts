@@ -9,7 +9,6 @@ import { ImageService } from './services/image.service';
 import { MailModule } from './services/mail/mail.module';
 import { MailService } from './services/mail/mail.service';
 import { ValidatorService } from './services/validator.service';
-
 const providers: Provider[] = [
   ApiConfigService,
   ValidatorService,
