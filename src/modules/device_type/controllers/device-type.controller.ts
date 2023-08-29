@@ -17,9 +17,9 @@ import {
 
 import { ForbiddenResponseDto } from '../../../common/dto/forbidden-response.dto';
 import { SuccessMetaResponseDto } from '../../../common/dto/success-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { ROLE_TYPE } from '../../../constants';
 import { Auth } from '../../../decorators';
-import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
 import type { DeviceTypeDto } from '../domains/dtos/device-type.dto';
 import { DeviceTypesMetaResponseDto } from '../domains/dtos/device-types-meta-response.dto';
 import { InputDeviceTypeDto } from '../domains/dtos/input-device-type.dto';

@@ -22,6 +22,7 @@ import { Response } from 'express';
 
 import { ForbiddenResponseDto } from '../../../common/dto/forbidden-response.dto';
 import { SuccessMetaResponseDto } from '../../../common/dto/success-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { UnprocessableEntityResponseDto } from '../../../common/dto/unprocessable-entity.dto';
 import { ROLE_TYPE } from '../../../constants';
 import { Auth } from '../../../decorators';
@@ -30,7 +31,6 @@ import { LogbookMetaResponseDto } from '../../logbook/domains/dtos/logbook-meta-
 import { LogbookNotFoundResponseDto } from '../../logbook/domains/dtos/logbook-not-found.response.dto';
 import { LogbooksMetaResponseDto } from '../../logbook/domains/dtos/logbooks-meta-response.dto';
 import { LogbookService } from '../../logbook/services/logbook.service';
-import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
 import { DeviceMetaResponseDto } from '../domains/dtos/device-meta-response.dto';
 import { DeviceNotFoundResponseDto } from '../domains/dtos/device-not-found-response.dto';
 import type { DeviceResponseDto } from '../domains/dtos/device-response.dto';

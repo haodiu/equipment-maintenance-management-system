@@ -20,10 +20,10 @@ import {
 
 import { ForbiddenResponseDto } from '../../../common/dto/forbidden-response.dto';
 import { SuccessMetaResponseDto } from '../../../common/dto/success-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { UnprocessableEntityResponseDto } from '../../../common/dto/unprocessable-entity.dto';
 import { ROLE_TYPE } from '../../../constants';
 import { Auth, AuthUser } from '../../../decorators';
-import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
 import { UserEntity } from '../../user/domains/entities/user.entity';
 import type { LogbookDto } from '../domains/dtos/logbook.dto';
 import { LogbookConfirmDto } from '../domains/dtos/logbook-confirm.dto';

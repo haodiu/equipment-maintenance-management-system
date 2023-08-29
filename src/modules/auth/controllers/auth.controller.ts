@@ -8,7 +8,7 @@ import {
 } from '@nestjs/swagger';
 
 import { SuccessMetaResponseDto } from '../../../common/dto/success-response.dto';
-import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { UserNotFoundResponseDto } from '../../user/domains/dtos/user-not-found-response.dto';
 import { EmailDto } from '../dtos/email.dto';
 import { LoginDto } from '../dtos/login.dto';

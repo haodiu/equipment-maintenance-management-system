@@ -2,22 +2,23 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { DataNull } from '../../../../common/dto/null-data.dto';
-class UnauthorizedMetaResponseDto {
-  @ApiProperty({ example: HttpStatus.UNAUTHORIZED })
+
+class FileNotImageMetaResponseDto {
+  @ApiProperty({ example: HttpStatus.BAD_REQUEST })
   statusCode: number;
 
-  @ApiPropertyOptional({ example: 'Unauthorized' })
+  @ApiPropertyOptional({ example: 'File not image' })
   message: string;
 
-  @ApiPropertyOptional({ example: 'USER_002' })
+  @ApiPropertyOptional({ example: 'FILE_001' })
   error: string;
 }
 
-export class UnauthorizedResponseDto {
+export class FileNotImageResponseDto {
   @ApiProperty({
-    type: UnauthorizedMetaResponseDto,
+    type: FileNotImageMetaResponseDto,
   })
-  meta: UnauthorizedMetaResponseDto;
+  meta: FileNotImageMetaResponseDto;
 
   @ApiProperty({ type: DataNull })
   result: DataNull;

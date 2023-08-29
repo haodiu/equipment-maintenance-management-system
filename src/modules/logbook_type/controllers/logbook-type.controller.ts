@@ -7,9 +7,9 @@ import {
 } from '@nestjs/swagger';
 
 import { ForbiddenResponseDto } from '../../../common/dto/forbidden-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { ROLE_TYPE } from '../../../constants';
 import { Auth } from '../../../decorators';
-import { UnauthorizedResponseDto } from '../../user/domains/dtos/unauthorized-response.dto';
 import type { LogbookTypeDto } from '../domains/dtos/logbook-type.dto';
 import { LogbookTypeMetaResponseDto } from '../domains/dtos/logbook-type-meta-response.dto';
 import type { NumLogbookByTypeDto } from '../domains/dtos/num-logbook-type.dto';

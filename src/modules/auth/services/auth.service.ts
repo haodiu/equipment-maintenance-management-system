@@ -63,6 +63,14 @@ export class AuthService {
     return new LoginResponseDto(user, accessToken);
   }
 
+  /**
+   * Generates a random token for password reset, associates it with the user,
+   * sends the token to the user's email, and sets an expiration time for the token.
+   *
+   * @param {EmailDto} emailDto - An object containing the user's email.
+   * @returns {Promise<void>} A Promise that resolves when the token generation and email sending are completed.
+   * @throws {UserNotFoundException} If the user with the provided email is not found.
+   */
   async createForgotPasswordToken(emailDto: EmailDto): Promise<void> {
     const { email } = emailDto;
     const user = await this.userService.findOneByFilterOptions({ email });
@@ -78,6 +86,13 @@ export class AuthService {
     await this.mailService.sendUserToken(email, token);
   }
 
+  /**
+   * Resets the user's password using the provided token after validation.
+   *
+   * @param {ResetPasswordDto} resetPasswordDto - An object containing email, token, and new password.
+   * @returns {Promise<void>} A Promise that resolves when the password reset is completed.
+   * @throws {NotFoundException} If the email or token is invalid or expired.
+   */
   async resetPasswordWithToken(
     resetPasswordDto: ResetPasswordDto,
   ): Promise<void> {

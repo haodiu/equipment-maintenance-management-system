@@ -18,6 +18,7 @@ import {
 } from '@nestjs/swagger';
 
 import { ForbiddenResponseDto } from '../../../common/dto/forbidden-response.dto';
+import { UnauthorizedResponseDto } from '../../../common/dto/unauthorized-response.dto';
 import { UnprocessableEntityResponseDto } from '../../../common/dto/unprocessable-entity.dto';
 import { ROLE_TYPE } from '../../../constants';
 import { Auth, AuthUser } from '../../../decorators';
@@ -28,7 +29,6 @@ import { LogbookMetaResponseDto } from '../../logbook/domains/dtos/logbook-meta-
 import { LogbookNotFoundResponseDto } from '../../logbook/domains/dtos/logbook-not-found.response.dto';
 import { LogbookService } from '../../logbook/services/logbook.service';
 import { ChangePasswordMetaResponseDto } from '../domains/dtos/change-password-meta-response.dto';
-import { UnauthorizedResponseDto } from '../domains/dtos/unauthorized-response.dto';
 import { UpdateUserProfileDto } from '../domains/dtos/update-user-profile.dto';
 import { UserDto } from '../domains/dtos/user.dto';
 import { UserMetaResponseDto } from '../domains/dtos/user-meta-response.dto';
