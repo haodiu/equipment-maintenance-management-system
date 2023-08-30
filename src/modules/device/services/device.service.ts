@@ -184,7 +184,6 @@ export class DeviceService {
    * Save a device entity.
    *
    * @param {DeviceEntity} device - The device entity to save.
-   * @returns {Promise<DeviceEntity>} A promise that resolves to the saved device entity.
    */
   setDevice(device: DeviceEntity) {
     return this.deviceRepository.save(device);
