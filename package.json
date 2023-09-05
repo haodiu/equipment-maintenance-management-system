@@ -1,7 +1,7 @@
 {
-  "name": "alia_backend",
+  "name": "nac-backend",
   "version": "9.0.0",
-  "description": "Alia Backend, Typescript, Postgres, TypeORM",
+  "description": "NAC Backend, Typescript, Postgres, TypeORM",
   "private": true,
   "license": "MIT",
   "scripts": {
