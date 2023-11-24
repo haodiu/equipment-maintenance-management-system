@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsIn } from 'class-validator';
 
-import { Trim } from '../../../../decorators';
 import { LogbookStatusType } from './../../../../constants/logbook-status';
 export class LogbookUpdateStatusDto {
   @ApiProperty()
@@ -14,10 +13,4 @@ export class LogbookUpdateStatusDto {
     'Đã huỷ',
   ])
   readonly status: LogbookStatusType;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  @Trim()
-  readonly timePlaned: string;
 }
