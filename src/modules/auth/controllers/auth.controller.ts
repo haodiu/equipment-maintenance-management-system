@@ -61,7 +61,7 @@ export class AuthController {
     type: UnprocessableEntityResponseDto,
   })
   login(@Body() credential: LoginDto): Promise<LoginResponseDto> {
-    return this.authService.validateAdminSignIn(credential);
+    return this.authService.validateSignIn(credential);
   }
 
   @Post('/forgot-password')

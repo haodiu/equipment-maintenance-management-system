@@ -173,7 +173,7 @@ export class DeviceController {
     return this.logbookService.findAllByDeviceId(deviceId);
   }
 
-  @Put(':id/update')
+  @Put(':id')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({

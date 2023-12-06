@@ -36,7 +36,7 @@ export class LiquidationController {
     return this.liquidationService.getAll(option);
   }
 
-  @Get('/download-info')
+  @Get('/download-liquidation')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ description: 'Download user information successfully' })
@@ -60,7 +60,7 @@ export class LiquidationController {
     return this.liquidationService.getDetail(id);
   }
 
-  @Put(':id/update')
+  @Put(':id')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF])
   @HttpCode(HttpStatus.OK)
   updateLiquidation(

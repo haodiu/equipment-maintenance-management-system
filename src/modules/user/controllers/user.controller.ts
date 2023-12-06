@@ -147,7 +147,7 @@ export class UserController {
     return this.logbookService.getByUserId(userId);
   }
 
-  @Put(':id/profile')
+  @Put(':id')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({

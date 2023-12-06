@@ -106,7 +106,7 @@ export class LogbookController {
     return this.logbookService.getOne(logbookId);
   }
 
-  @Put(':id/update-status')
+  @Put(':id/status')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({

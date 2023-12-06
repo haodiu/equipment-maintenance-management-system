@@ -39,12 +39,12 @@ export class AuthService {
    * @param credential
    * @returns LoginResponseDto
    */
-  async validateAdminSignIn(credential: LoginDto): Promise<LoginResponseDto> {
+  async validateSignIn(credential: LoginDto): Promise<LoginResponseDto> {
     const { email, password } = credential;
     const user = await this.userService.findOneByFilterOptions({ email });
 
     if (!user) {
-      throw new UserNotFoundException('Admin not found');
+      throw new UserNotFoundException('User not found');
     }
 
     const isPasswordValid = await validateHash(password, user.password);
@@ -107,7 +107,6 @@ export class AuthService {
       throw new NotFoundException('Invalid email or token');
     }
 
-    // Update the password for the user
     const newPasswordHashed = generateHash(newPassword);
     user.password = newPasswordHashed;
     user.resetPasswordToken = '';
