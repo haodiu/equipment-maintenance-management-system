@@ -61,7 +61,7 @@ export class UserController {
     return this.userService.getDeviceUsers();
   }
 
-  @Get('profile')
+  @Get('my-profile')
   @Auth([ROLE_TYPE.MAINTENANCE_STAFF, ROLE_TYPE.USER])
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({

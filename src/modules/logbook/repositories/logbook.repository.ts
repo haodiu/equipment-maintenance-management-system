@@ -10,38 +10,38 @@ export class LogbookRepository extends Repository<LogbookEntity> {
   }
 
   async findByDeviceId(deviceId: number): Promise<LogbookEntity[]> {
-    return this.createQueryBuilder('logbooks')
-      .leftJoinAndSelect('logbooks.user', 'user')
-      .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.is_deleted = FALSE')
-      .andWhere('logbooks.device_id = :deviceId', { deviceId })
-      .orderBy('logbooks.updated_at', 'DESC')
+    return this.createQueryBuilder('logbook')
+      .leftJoinAndSelect('logbook.user', 'user')
+      .leftJoinAndSelect('logbook.device', 'device')
+      .leftJoinAndSelect('logbook.type', 'logbookType')
+      .where('logbook.is_deleted = FALSE')
+      .andWhere('logbook.device_id = :deviceId', { deviceId })
+      .orderBy('logbook.updated_at', 'DESC')
       .getMany();
   }
 
   async findById(id: number): Promise<LogbookEntity | null> {
-    return this.createQueryBuilder('logbooks')
-      .leftJoinAndSelect('logbooks.user', 'user')
-      .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.is_deleted = FALSE')
-      .andWhere('logbooks.id = :id', { id })
+    return this.createQueryBuilder('logbook')
+      .leftJoinAndSelect('logbook.user', 'user')
+      .leftJoinAndSelect('logbook.device', 'device')
+      .leftJoinAndSelect('logbook.type', 'logbookType')
+      .where('logbook.is_deleted = FALSE')
+      .andWhere('logbook.id = :id', { id })
       .getOne();
   }
 
   async findAll(type?: string): Promise<LogbookEntity[]> {
-    const query = this.createQueryBuilder('logbooks')
-      .leftJoinAndSelect('logbooks.user', 'user')
-      .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.is_deleted = FALSE');
+    const query = this.createQueryBuilder('logbook')
+      .leftJoinAndSelect('logbook.user', 'user')
+      .leftJoinAndSelect('logbook.device', 'device')
+      .leftJoinAndSelect('logbook.type', 'logbookType')
+      .where('logbook.is_deleted = FALSE');
 
     if (type) {
       query.andWhere('logbookType.type = :type', { type });
     }
 
-    query.orderBy('logbooks.user_id', 'ASC');
+    query.orderBy('logbook.user_id', 'ASC');
 
     return query.getMany();
   }
@@ -49,13 +49,13 @@ export class LogbookRepository extends Repository<LogbookEntity> {
   async findLastLogbookByUserId(
     deviceId: number,
   ): Promise<LogbookEntity | null> {
-    return this.createQueryBuilder('logbooks')
-      .leftJoinAndSelect('logbooks.user', 'user')
-      .leftJoinAndSelect('logbooks.device', 'device')
-      .leftJoinAndSelect('logbooks.type', 'logbookType')
-      .where('logbooks.is_deleted = FALSE')
-      .andWhere('logbooks.device_id = :deviceId', { deviceId })
-      .orderBy('logbooks.created_at', 'DESC')
+    return this.createQueryBuilder('logbook')
+      .leftJoinAndSelect('logbook.user', 'user')
+      .leftJoinAndSelect('logbook.device', 'device')
+      .leftJoinAndSelect('logbook.type', 'logbookType')
+      .where('logbook.is_deleted = FALSE')
+      .andWhere('logbook.device_id = :deviceId', { deviceId })
+      .orderBy('logbook.created_at', 'DESC')
       .getOne();
   }
 }

@@ -34,8 +34,8 @@ import { LogbookUpdateStatusDto } from '../domains/dtos/logbook-update-status.dt
 import { LogbooksMetaResponseDto } from '../domains/dtos/logbooks-meta-response.dto';
 import { LogbookService } from '../services/logbook.service';
 
-@Controller('logbooks')
-@ApiTags('logbooks')
+@Controller('logbook')
+@ApiTags('logbook')
 export class LogbookController {
   constructor(private readonly logbookService: LogbookService) {}
 
