@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 
+import type { PageOptionsDto } from '../../../common/dto/page-options.dto';
 import type { InputDeviceDto } from '../domains/dtos/input-device.dto';
 import { DeviceEntity } from '../domains/entities/device.entity';
 
@@ -45,6 +46,23 @@ export class DeviceRepository extends Repository<DeviceEntity> {
       .where('devices.is_deleted = FALSE')
       .orderBy('devices.id', 'ASC')
       .getMany();
+  }
+
+  async findAllWithPagination(
+    pageOptionsDto: PageOptionsDto,
+  ): Promise<DeviceEntity[] | null> {
+    const { skip, take, order } = pageOptionsDto;
+
+    const queryBuilder = this.createQueryBuilder('devices');
+
+    // Apply pagination
+    queryBuilder.skip(skip).take(take);
+
+    // Apply ordering
+    queryBuilder.orderBy('devices.id', order);
+
+    // Execute query
+    return queryBuilder.getMany();
   }
 
   async findAllByUserId(userId: number): Promise<DeviceEntity[] | null> {

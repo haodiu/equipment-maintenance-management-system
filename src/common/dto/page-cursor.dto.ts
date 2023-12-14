@@ -17,5 +17,5 @@ export class PageCursorDto {
   readonly take: number = PAGING_LIMIT;
 
   @IsEnum(ORDER)
-  readonly sort: OderType = ORDER.DESC;
+  readonly sort: OderType = ORDER.ASC;
 }
