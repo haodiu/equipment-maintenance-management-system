@@ -1,4 +1,5 @@
 #  ZACorp Backend
+The purpose of the project is to develop a web application for maintenance management - managing devices within the company. The application caters to the needs of two main user groups: maintenance staff and device users. It will assist in managing device information. Additionally, the application enables the execution of maintenance requests, retrieval, replacement, and proposes device disposal.
 
 ## Setup this repo to start development
 
@@ -13,5 +14,6 @@
 -   Run `make down-migrate` to revert 1 version right before.
 
 ## How to run
-1. make bootstrap
-2. make dev-up
+1.  make bootstrap
+2.  make dev-up
+
