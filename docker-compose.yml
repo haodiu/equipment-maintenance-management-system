@@ -30,7 +30,7 @@
 version: "3"
 services:
   app:
-    image: registry-gitlab.geekup.io/gu_alia/alia-backend-gi:latest
+    image: za-backend:latest
     env_file:
       - .env
     restart: always
@@ -45,7 +45,7 @@ services:
     image: za-backend/nginx:latest
     depends_on:
       - app
-      - mail hog
+      - mailhog  # Corrected service name here
     environment:
       - NGINX_SERVER_NAME=zaequipment.online
       - APP_HOST=app
